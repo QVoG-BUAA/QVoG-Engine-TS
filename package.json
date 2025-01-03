@@ -18,5 +18,15 @@
     "graph"
   ],
   "author": "Tony S.",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/gremlin": "^3.6.7",
+    "gremlin": "^3.4.3",
+    "tslog": "^4.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
 }

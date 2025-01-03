@@ -9,7 +9,8 @@
         "module": "esnext",
         "target": "esnext",
         "lib": [
-            "esnext"
+            "esnext",
+            "dom"
         ],
         "declaration": true,
         "strict": true,
@@ -17,6 +18,12 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "outDir": "dist",
-        "rootDir": "src"
-    }
+        "rootDir": "src",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": [
+                "src/*"
+            ]
+        }
+    },
 }
