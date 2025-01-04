@@ -10,8 +10,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "lint": "eslint src",
-    "lint-fix": "eslint src --fix"
+    "lint": "eslint src --fix"
   },
   "keywords": [
     "qvog",
