@@ -1,7 +1,7 @@
 export interface Vertex {
     id: number;
     label: string;
-    properties?: VertexProperty[];
+    properties?: object;
 }
 
 export interface Edge {
@@ -9,14 +9,14 @@ export interface Edge {
     label: string;
     inV: Vertex;
     outV: Vertex;
-    properties?: EdgeProperty[];
+    properties?: object;
 }
 
 export interface VertexProperty {
     id: number;
     label: string;
+    key: string;
     value: any;
-    properties?: EdgeProperty[];
 }
 
 export interface EdgeProperty {

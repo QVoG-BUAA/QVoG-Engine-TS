@@ -1,16 +1,16 @@
 import { driver, process, structure } from "gremlin";
 
 export class GremlinConnection {
-    g: process.GraphTraversalSource;
+    private connection: driver.DriverRemoteConnection;
+    private g: process.GraphTraversalSource;
 
     /**
      * @param connectionString e.g. ws://localhost:8182/gremlin
      */
     constructor(connectionString: string) {
-        const connection = new driver.DriverRemoteConnection(connectionString);
         const graph = new structure.Graph();
-
-        this.g = graph.traversal().withRemote(connection);
+        this.connection = new driver.DriverRemoteConnection(connectionString);
+        this.g = graph.traversal().withRemote(this.connection);
     }
 
     V(): process.GraphTraversal {
@@ -19,5 +19,9 @@ export class GremlinConnection {
 
     E(): process.GraphTraversal {
         return this.g.E();
+    }
+
+    close(): void {
+        this.connection.close();
     }
 }

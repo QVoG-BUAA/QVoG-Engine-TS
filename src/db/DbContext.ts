@@ -24,4 +24,10 @@ export class DbContext {
     getGremlinConnection(): GremlinConnection {
         return this.gremlin;
     }
+
+    close(): void {
+        this.log.info("Closing DbContext");
+        this.gremlin.close();
+        this.log.trace("DbContext closed");
+    }
 }

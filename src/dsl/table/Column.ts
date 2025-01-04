@@ -118,7 +118,7 @@ export class DataColumn extends Column {
     }
 
     duplicate(schemaOnly: boolean): DataColumn {
-        let column = new DataColumn(this.name);
+        const column = new DataColumn(this.name);
         if (!schemaOnly) {
             column.addValues(this.values);
         }
@@ -151,7 +151,7 @@ export class PredicateColumn extends Column {
     }
 
     containsValue(value: any): boolean {
-        return this.predicate(value);
+        return this.predicate.test(value);
     }
 
     duplicate(schemaOnly: boolean): PredicateColumn {
@@ -185,7 +185,7 @@ export class TextColumn extends Column {
     }
 
     duplicate(schemaOnly: boolean): TextColumn {
-        let column = new TextColumn(this.name);
+        const column = new TextColumn(this.name);
         if (!schemaOnly) {
             column.addValues(this.values);
         }

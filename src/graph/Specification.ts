@@ -28,7 +28,7 @@ export class ValueFactory {
         this.specification = specification;
     }
 
-    build<TValue extends Value, TDefault extends TValue>(json: AstJson, defaultValue: TDefault): TValue {
+    build<TValue extends Value, TDefault extends Value>(json: AstJson, defaultValue: TDefault): TValue | TDefault {
         const identifier = json["_type"];
 
         const rule = this.specification.rules.find(h => h.types.includes(identifier)) || this.defaultRule;

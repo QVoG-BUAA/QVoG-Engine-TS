@@ -1,14 +1,14 @@
 import { Vertex } from "~/db/gremlin/Defines";
-import { CodeProperty } from "~/graph/Defines";
+import { CodeProperty, FileProperty } from "~/graph/Defines";
 
-export abstract class Node {
+export abstract class GraphNode {
     protected vertex: Vertex;
 
     constructor(vertex: Vertex) {
         this.vertex = vertex;
     }
 
-    id(): number {
+    getId(): number {
         return this.vertex.id;
     }
 
@@ -17,8 +17,8 @@ export abstract class Node {
     }
 }
 
-export class CodeNode extends Node {
-    private property: CodeProperty
+export class CodeNode extends GraphNode {
+    private property: CodeProperty;
 
     constructor(vertex: Vertex, property: CodeProperty) {
         super(vertex);
@@ -30,8 +30,15 @@ export class CodeNode extends Node {
     }
 }
 
-/*
- * TODO: Other node types
- * - FileNode
- * - FolderNode
- */
+export class FileNode extends GraphNode {
+    private property: FileProperty;
+
+    constructor(vertex: Vertex, property: FileProperty) {
+        super(vertex);
+        this.property = property;
+    }
+
+    getProperty(): FileProperty {
+        return this.property;
+    }
+}

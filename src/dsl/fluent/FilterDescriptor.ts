@@ -1,15 +1,22 @@
 import { Table } from "~/dsl/table/Table";
-import { isRowPredicate, isValuePredicate, RowPredicate, ValuePredicate } from "~/dsl/Defines";
+import { RowPredicate, ValuePredicate } from "~/dsl/Defines";
 
-export interface FilterDescriptor {
+export class FilterDescriptor {
     alias: string;
     apply: (table: Table) => Table;
+
+    constructor(alias: string, apply: (table: Table) => Table) {
+        this.alias = alias;
+        this.apply = apply;
+    }
 }
 
+export type FilterClause = (clause: FilterDescriptorBuilder) => ICanBuildFilterDescriptor;
+
 function applyImpl(table: Table, predicate: RowPredicate): Table {
-    let newTable = table.duplicate();
-    for (let row of table) {
-        if (predicate(row)) {
+    const newTable = table.duplicate();
+    for (const row of table) {
+        if (predicate.test(row)) {
             newTable.addRow(row);
         }
     }
@@ -17,7 +24,7 @@ function applyImpl(table: Table, predicate: RowPredicate): Table {
 }
 
 export interface IFilterDescriptorBuilder {
-    onTable(name: string): ICanSetFilterPredicate;
+    on(alias: string): ICanSetFilterPredicate;
 }
 
 export interface ICanSetFilterPredicate {
@@ -32,15 +39,15 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
     private alias?: string;
     private apply?: (table: Table) => Table;
 
-    onTable(name: string): ICanSetFilterPredicate {
-        this.alias = name;
+    on(alias: string): ICanSetFilterPredicate {
+        this.alias = alias;
         return this;
     }
 
     where(predicate: ValuePredicate | RowPredicate): ICanBuildFilterDescriptor {
-        if (isValuePredicate(predicate)) {
-            this.apply = table => applyImpl(table, row => predicate(row.get(this.alias!)));
-        } else if (isRowPredicate(predicate)) {
+        if (predicate instanceof ValuePredicate) {
+            this.apply = table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
+        } else if (predicate instanceof RowPredicate) {
             this.apply = table => applyImpl(table, predicate);
         } else {
             throw new Error("Invalid predicate type");
@@ -49,9 +56,6 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
     }
 
     build(): FilterDescriptor {
-        return {
-            alias: this.alias!,
-            apply: this.apply!
-        };
+        return new FilterDescriptor(this.alias!, this.apply!);
     }
 }

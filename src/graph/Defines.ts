@@ -3,10 +3,13 @@ export interface AstJson {
 }
 
 export interface CodeProperty {
-    id: number;
+    lineno: number;
     code: string;
-    lineNumber: number;
-    filename: string;
-    functionDefName: string;
-    json: string;
+    file: string;
+    json: AstJson;
+    functionDefName?: string;
+}
+
+export interface FileProperty {
+    path: string;
 }

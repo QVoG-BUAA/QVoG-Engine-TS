@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from "fs";
 
 export interface PrintStream {
     print(text: string): void;
@@ -11,28 +11,40 @@ export class ConsolePrintStream implements PrintStream {
     }
 
     println(text: string): void {
-        this.print(text + '\n');
+        this.print(text + "\n");
     }
 }
 
 export class FilePrintStream implements PrintStream {
-    private readonly file: string;
-    private readonly append: boolean;
+    private fd: number = 0;
+    private append: boolean;
 
     constructor(file: string, append: boolean) {
-        this.file = file;
+        fs.open(file, append ? "a" : "w", (err, fd) => {
+            if (err) {
+                throw new Error(`Cannot open file ${file}`);
+            } else {
+                this.fd = fd;
+            }
+        });
         this.append = append;
     }
 
     print(text: string): void {
-        fs.writeFile(this.file, text, { flag: this.append ? 'a' : 'w' }, (err) => {
+        fs.write(this.fd, text, (err) => {
             if (err) {
-                console.error(err);
+                throw new Error(`Cannot write to file`);
             }
         });
     }
 
     println(text: string): void {
-        this.print(text + '\n');
+        this.print(text + "\n");
+    }
+}
+
+export class FileUtils {
+    static readTextFile(file: string): string {
+        return fs.readFileSync(file, "utf8");
     }
 }

@@ -1,29 +1,31 @@
 import { Value } from "~/graph/values/Value";
 import { Table } from "~/dsl/table/Table";
 
-export interface ValuePredicate {
-    (value: Value): boolean;
-}
-
-export function isValuePredicate(predicate: any): predicate is ValuePredicate {
-    return typeof predicate === 'function';
+export class ValuePredicate {
+    test: (value: Value) => boolean;
+    constructor(test: (value: Value) => boolean) {
+        this.test = test;
+    }
 }
 
 export type Row = Map<string, any>;
 export type RowWithoutHeader = Array<any>;
 
-export interface RowPredicate {
-    (row: Row): boolean;
+export class RowPredicate {
+    test: (row: Row) => boolean;
+    constructor(test: (row: Row) => boolean) {
+        this.test = test;
+    }
 }
 
-export function isRowPredicate(predicate: any): predicate is RowPredicate {
-    return typeof predicate === 'function';
-}
-
-export interface FilterPredicate {
+export class FilterPredicate {
     alias: string;
-
     apply: (table: Table) => Table;
+
+    constructor(alias: string, apply: (table: Table) => Table) {
+        this.alias = alias;
+        this.apply = apply;
+    }
 }
 
 export interface FlowPredicate {

@@ -1,14 +1,20 @@
-import { DbContext } from "~/db/DbContext";
 import { Table } from "~/dsl/table/Table";
-import { ValuePredicate } from "../Defines";
-import { environment } from "~/engine/Environment";
-import { PredicateColumn } from "../table/Column";
+import { DbContext } from "~/db/DbContext";
+import { ValuePredicate } from "~/dsl/Defines";
 import { Configuration } from "~/Configuration";
+import { PredicateColumn } from "~/dsl/table/Column";
 
-export interface FromDescriptor {
+export class FromDescriptor {
     alias: string;
     apply: (dbContext: DbContext) => Table;
+
+    constructor(alias: string, apply: (dbContext: DbContext) => Table) {
+        this.alias = alias;
+        this.apply = apply;
+    }
 }
+
+export type FromClause = (clause: FromDescriptorBuilder) => ICanBuildFromDescriptor;
 
 export interface IFromDescriptorBuilder {
     withData(predicate: ValuePredicate): ICanSetAlias;
@@ -48,40 +54,34 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     build(): FromDescriptor {
         switch (this.choice) {
             case 0:
-                return new DataFromDescriptor(this.alias!, this.predicate!);
+                return DataFromDescriptorBuilder.build(this.alias!, this.predicate!);
             case 1:
-                return new PredicateFromDescriptor(this.alias!, this.predicate!);
+                return PredicateFromDescriptorBuilder.build(this.alias!, this.predicate!);
             default:
                 throw new Error("Invalid choice");
         }
     }
 }
 
-export class DataFromDescriptor implements FromDescriptor {
-    alias: string;
-    apply: (dbContext: DbContext) => Table;
-
-    constructor(alias: string, predicate: ValuePredicate) {
-        this.alias = alias;
-        this.apply = (dbContext: DbContext) => {
+class DataFromDescriptorBuilder {
+    static build(alias: string, predicate: ValuePredicate): FromDescriptor {
+        const apply = (dbContext: DbContext) => {
             return Configuration.getGraphFilter()
                 .withConnection(dbContext.getGremlinConnection())
                 .withPredicate(predicate)
-                .filter(this.alias);
+                .filter(alias);
         };
+        return new FromDescriptor(alias, apply);
     }
 }
 
-export class PredicateFromDescriptor implements FromDescriptor {
-    alias: string;
-    apply: (dbContext: DbContext) => Table;
-
-    constructor(alias: string, predicate: ValuePredicate) {
-        this.alias = alias;
-        this.apply = (dbContext: DbContext) => {
-            let table = new Table(this.alias);
-            table.addColumn(new PredicateColumn(this.alias, predicate));
+class PredicateFromDescriptorBuilder {
+    static build(alias: string, predicate: ValuePredicate) {
+        const apply = (dbContext: DbContext) => {
+            const table = new Table(alias);
+            table.addColumn(new PredicateColumn(alias, predicate));
             return table;
         };
+        return new FromDescriptor(alias, apply);
     }
 }

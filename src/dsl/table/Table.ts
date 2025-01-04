@@ -57,7 +57,7 @@ export class Table {
     }
 
     getColumn(name: string): Column {
-        let column = this.columns.find(column => column.getName() === name);
+        const column = this.columns.find(column => column.getName() === name);
         if (!column) {
             throw new Error(`Column with name ${name} does not exist`);
         }
@@ -69,23 +69,27 @@ export class Table {
     }
 
     addRow(row: Row): void {
-        for (let column of this.columns) {
+        for (const column of this.columns) {
             column.addValue(row.get(column.getName()) || null);
         }
         this.size++;
     }
 
     getRow(index: number): Row {
-        let row = new Map();
-        for (let column of this.columns) {
+        const row = new Map();
+        for (const column of this.columns) {
             row.set(column.getName(), column.getValue(index));
         }
         return row;
     }
 
+    getHeaders(): string[] {
+        return this.columns.map(column => column.getName());
+    }
+
     getRowWithoutHeader(index: number): RowWithoutHeader {
-        let row = [];
-        for (let column of this.columns) {
+        const row = [];
+        for (const column of this.columns) {
             row.push(column.getValue(index));
         }
         return row;
@@ -116,12 +120,12 @@ export class Table {
                 }
                 return { value: null, done: true };
             }
-        }
+        };
     }
 
     duplicate(schemaOnly: boolean = true): Table {
-        let table = new Table(this.name);
-        for (let column of this.columns) {
+        const table = new Table(this.name);
+        for (const column of this.columns) {
             table.addColumn(column.duplicate(schemaOnly));
         }
         return table;
@@ -149,15 +153,17 @@ export class TableSet {
         this.tables.set(table.getName(), table);
     }
 
-    removeTable(name: string): void {
-        if (!this.tables.has(name)) {
-            throw new Error(`Table with name ${name} does not exist.`);
+    removeTable(name: string): Table {
+        const table = this.tables.get(name);
+        if (!table) {
+            throw new Error(`Table with name ${name} does not exist`);
         }
         this.tables.delete(name);
+        return table;
     }
 
     getTable(name: string): Table {
-        let table = this.tables.get(name);
+        const table = this.tables.get(name);
         if (!table) {
             throw new Error(`Table with name ${name} does not exist`);
         }
