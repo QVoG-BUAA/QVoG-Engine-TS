@@ -3,6 +3,7 @@ import { ConsolePrintStream, FileUtils, PrintStream } from "~/extensions/IOExt";
 import { ConsoleJsonResultFormatter, IResultFormatter } from "./ResultFormatter";
 import { DbContext } from "~/db/DbContext";
 import { Configuration } from "~/Configuration";
+import { Queryable } from "~/engine/Defines";
 
 export class QVoGEngine {
     private static instance: QVoGEngine;
@@ -53,7 +54,37 @@ export class QVoGEngine {
         return this;
     }
 
-    execute(name: string, query: Query): void {
+    execute(query: Queryable): QVoGEngine {
+        this.executeImpl(query[0], query[1]);
+        return this;
+    }
+
+    executeAsync(query: Queryable): Promise<QVoGEngine> {
+        return new Promise((resolve, reject) => {
+            this.execute(query);
+            resolve(this);
+        });
+    }
+
+    submit(queries: Queryable[]): QVoGEngine {
+        queries.forEach(query => this.execute(query));
+        return this;
+    }
+
+    submitAsync(queries: Queryable[]): Promise<QVoGEngine> {
+        return new Promise((resolve, reject) => {
+            this.submit(queries);
+            resolve(this);
+        });
+    }
+
+    close(): void {
+        this.output.println(`Total execution time: ${this.totalExecutionTime}ms`);
+        Configuration.getDbContext().close();
+        this.log.info("QVoG Engine closed");
+    }
+
+    private executeImpl(name: string, query: Query): void {
         this.log.info(`Executing query ${name}`);
         const start = Date.now();
         const result = query(new QueryDescriptor().withDatabase(Configuration.getDbContext())).toString(this.style!);
@@ -68,18 +99,5 @@ export class QVoGEngine {
         }));
 
         this.totalExecutionTime += executionTime;
-    }
-
-    executeAsync(name: string, query: Query): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.execute(name, query);
-            resolve();
-        });
-    }
-
-    close(): void {
-        this.output.println(`Total execution time: ${this.totalExecutionTime}ms`);
-        Configuration.getDbContext().close();
-        this.log.info("QVoG Engine closed");
     }
 }

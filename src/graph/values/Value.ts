@@ -1,3 +1,6 @@
+import { Configuration } from "~/Configuration";
+import { GraphNode } from "~/graph/Node";
+
 export abstract class Value {
     private id?: number;
 
@@ -7,6 +10,13 @@ export abstract class Value {
     constructor(identifier: string, supported: boolean = true) {
         this.identifier = identifier;
         this.supported = supported;
+    }
+
+    /**
+     * This is an intrusive method that invokes a global call.
+     */
+    getNode(): GraphNode {
+        return Configuration.getContext().getNode(this);
     }
 
     setId(id: number): void {

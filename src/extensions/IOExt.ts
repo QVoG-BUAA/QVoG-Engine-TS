@@ -33,7 +33,7 @@ export class FilePrintStream implements PrintStream {
     print(text: string): void {
         fs.write(this.fd, text, (err) => {
             if (err) {
-                throw new Error(`Cannot write to file`);
+                throw new Error("Cannot write to file");
             }
         });
     }

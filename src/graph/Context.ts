@@ -18,28 +18,36 @@ export class Context {
         this.factory = factory;
     }
 
-    getValue(key: Vertex | number): Value {
+    getValue(key: Vertex | GraphNode | number): Value {
         return this.getRegistration(key)[1];
     }
 
-    getNode(key: Vertex | number): GraphNode {
+    getNode(key: Vertex | Value | number): GraphNode {
         return this.getRegistration(key)[0];
     }
 
-    private getRegistration(key: Vertex | number): NodeRegistration {
+    private getRegistration(key: Vertex | GraphNode | Value | number): NodeRegistration {
         let registration = this.tryGetRegistration(key);
         if (!registration) {
             if (typeof key === "number") {
                 throw new Error(`Node with id ${key} is not available`);
+            } else if (key instanceof GraphNode) {
+                throw new Error(`Node with id ${key.getId()} is not available`);
+            } else if (key instanceof Value) {
+                throw new Error(`Node with id ${key.getId()} is not available`);
             }
             registration = this.register(key);
         }
         return registration;
     }
 
-    private tryGetRegistration(key: Vertex | number): NodeRegistration | undefined {
+    private tryGetRegistration(key: Vertex | GraphNode | Value | number): NodeRegistration | undefined {
         if (typeof key === "number") {
             return this.registry.get(key);
+        } else if (key instanceof GraphNode) {
+            return this.registry.get(key.getId());
+        } else if (key instanceof Value) {
+            return this.registry.get(key.getId());
         }
         return this.registry.get(key.id);
     }
