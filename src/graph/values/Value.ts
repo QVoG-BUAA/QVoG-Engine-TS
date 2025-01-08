@@ -1,5 +1,7 @@
 import { GraphNode } from "~/graph/Node";
 import { Configuration } from "~/Configuration";
+import { Stream } from "~/extensions/Stream";
+import { ArrayIterableIterator } from "~/extensions";
 
 export abstract class Value {
     private id?: number;
@@ -36,6 +38,22 @@ export abstract class Value {
 
     isSupported(): boolean {
         return this.supported;
+    }
+
+    /**
+     * This method is used to get the stream representation of this value.
+     * It depends on the implementation of the `elements` method.
+     */
+    stream(): Stream<Value> {
+        return new Stream(this.elements());
+    }
+
+    /**
+     * Implement this method to return all children of this value.
+     * @note Do not call this method directly, use the `stream` method instead.
+     */
+    *elements(): IterableIterator<Value> {
+        yield this;
     }
 }
 
