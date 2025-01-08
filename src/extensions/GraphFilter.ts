@@ -1,3 +1,5 @@
+import deasync from "deasync";
+
 import { Table } from "~/dsl/table/Table";
 import { Context } from "~/graph/Context";
 import { Vertex } from "~/db/gremlin/Defines";
@@ -5,8 +7,6 @@ import { ValuePredicate } from "~/dsl/Defines";
 import { Configuration } from "~/Configuration";
 import { DataColumn } from "~/dsl/table/Column";
 import { GremlinConnection } from "~/db/gremlin/Connection";
-import deasync from "deasync";
-
 
 export class GraphFilter {
     private log = Configuration.getLogger("GraphFilter");

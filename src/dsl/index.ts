@@ -1,1 +1,9 @@
 export * from "./Defines";
+
+export * from "./fluent/FlowDescriptor";
+export * from "./fluent/FilterDescriptor";
+export * from "./fluent/FromDescriptor";
+export * from "./fluent/QueryDescriptor";
+
+export * from "./table/Column";
+export * from "./table/Table";

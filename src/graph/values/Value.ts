@@ -1,5 +1,5 @@
-import { Configuration } from "~/Configuration";
 import { GraphNode } from "~/graph/Node";
+import { Configuration } from "~/Configuration";
 
 export abstract class Value {
     private id?: number;

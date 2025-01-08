@@ -1,5 +1,5 @@
 import { AstJson } from "~/graph/Defines";
-import { Value, UnknownValue } from "~/graph/values/Value";
+import { UnknownValue, Value } from "~/graph/values/Value";
 
 export interface ILanguageRule<TValue extends Value> {
     /**

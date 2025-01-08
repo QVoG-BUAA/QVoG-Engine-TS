@@ -1,3 +1,7 @@
+import { process } from "gremlin";
+
+export { process };
+
 export interface Vertex {
     id: number;
     label: string;

@@ -1,5 +1,8 @@
+import { Edge } from "~/db/gremlin/Defines";
 import { Value } from "~/graph/values/Value";
-import { Table } from "~/dsl/table/Table";
+import { Configuration } from "~/Configuration";
+import { CodeNode, FileNode } from "~/graph/Node";
+import { ArrayIterator } from "~/extensions/Iterator";
 
 export class ValuePredicate {
     test: (value: Value) => boolean;
@@ -44,22 +47,129 @@ export class RowPredicate {
     }
 }
 
-export class FilterPredicate {
-    alias: string;
-    apply: (table: Table) => Table;
+export type FlowStep = [Value, Edge];
+export type OptionalFlowStep = [Value, Edge?];
 
-    constructor(alias: string, apply: (table: Table) => Table) {
-        this.alias = alias;
-        this.apply = apply;
+export class FlowStream {
+    private stream: OptionalFlowStep[];
+
+    constructor(stream?: OptionalFlowStep[]) {
+        this.stream = stream ? [...stream] : [];
+    }
+
+    getSize(): number {
+        return this.stream.length;
+    }
+
+    add(step: OptionalFlowStep) {
+        this.stream.push(step);
+    }
+
+    toString(): string {
+        const context = Configuration.getContext();
+        let result = "";
+        let first = true;
+        for (const [value, _] of this) {
+            const node = context.getNode(value);
+            let text: string;
+            if (node instanceof CodeNode) {
+                text = node.getProperty().lineno.toString();
+            } else if (node instanceof FileNode) {
+                text = node.getProperty().path;
+            } else {
+                throw new Error("Unexpected node type");
+            }
+            if (first) {
+                result += text;
+                first = false;
+            } else {
+                result += " -> " + text;
+            }
+        }
+        return result;
+    }
+
+    [Symbol.iterator](): Iterator<OptionalFlowStep> {
+        return this.iterator();
+    }
+
+    iterator(): Iterator<OptionalFlowStep> {
+        return new ArrayIterator(this.stream);
     }
 }
 
-export interface FlowPredicate {
-    alias: string;
+export class FlowPath {
+    private path: Value[];
 
-    sourceAlias?: string;
-    barrierAlias?: string;
-    sinkAlias?: string;
+    constructor(path?: Value[]) {
+        this.path = path ? [...path] : [];
+    }
 
-    apply: (source: Table, barrier: Table, sink: Table) => Table;
+    getSize(): number {
+        return this.path.length;
+    }
+
+    add(step: Value) {
+        this.path.push(step);
+    }
+
+    getPath(): Value[] {
+        return this.path;
+    }
+
+    clone(): FlowPath {
+        return new FlowPath(this.path);
+    }
+
+    toString(): string {
+        const context = Configuration.getContext();
+        let result = "";
+        let first = true;
+        for (const value of this) {
+            const node = context.getNode(value);
+            let text: string;
+            if (node instanceof CodeNode) {
+                text = node.getProperty().lineno.toString();
+            } else if (node instanceof FileNode) {
+                text = node.getProperty().path;
+            } else {
+                throw new Error("Unexpected node type");
+            }
+            if (first) {
+                result += text;
+                first = false;
+            } else {
+                result += " -> " + text;
+            }
+        }
+        return result;
+    }
+
+    [Symbol.iterator](): Iterator<Value> {
+        return this.iterator();
+    }
+
+    iterator(): Iterator<Value> {
+        return new ArrayIterator(this.path);
+    }
+}
+
+export class FlowPredicate {
+    test: (path: FlowPath) => boolean;
+
+    constructor(test: (path: FlowPath) => boolean) {
+        this.test = test;
+    }
+
+    static of(predicate: (path: FlowPath) => boolean): FlowPredicate {
+        return new FlowPredicate(predicate);
+    }
+
+    static any(): FlowPredicate {
+        return new FlowPredicate(() => true);
+    }
+
+    static none(): FlowPredicate {
+        return new FlowPredicate(() => false);
+    }
 }

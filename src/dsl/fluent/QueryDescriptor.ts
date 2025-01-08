@@ -1,12 +1,13 @@
-import { DbContext } from "~/db/DbContext";
-import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from "~/dsl/fluent/FilterDescriptor";
-import { FromClause, FromDescriptor, FromDescriptorBuilder } from "~/dsl/fluent/FromDescriptor";
-import { Table, TableSet } from "~/dsl/table/Table";
-import { Configuration } from "~/Configuration";
-import { TextColumn } from "../table/Column";
-import { TablePrettifier } from "~/extensions/TableExt";
 import { Value } from "~/graph";
+import { DbContext } from "~/db/DbContext";
+import { Configuration } from "~/Configuration";
+import { AnyColumn } from "~/dsl/table/Column";
 import { GraphExt } from "~/extensions/GraphExt";
+import { Table, TableSet } from "~/dsl/table/Table";
+import { TablePrettifier } from "~/extensions/TableExt";
+import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from "~/dsl/fluent/FlowDescriptor";
+import { FromClause, FromDescriptor, FromDescriptorBuilder } from "~/dsl/fluent/FromDescriptor";
+import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from "~/dsl/fluent/FilterDescriptor";
 
 export interface ICanConfigure {
     // TODO: Add configuration methods
@@ -20,6 +21,9 @@ export interface ICanApplyFromClause {
 export interface ICanApplyWhereClause {
     where(descriptor: FilterDescriptor): FilteredQuery;
     where(clause: FilterClause): FilteredQuery;
+
+    where(descriptor: FlowDescriptor): FilteredQuery;
+    where(clause: FlowClause, flow: () => IFlowDescriptorBuilder): FilteredQuery;
 }
 
 export interface ICanApplySelectClause {
@@ -47,7 +51,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     private tables: TableSet = new TableSet();
     private result?: Table;
 
-    private dbContext: DbContext = Configuration.getDbContext();
+    private dbContext?: DbContext;
 
     withDatabase(dbContext: DbContext): InitialQuery {
         this.dbContext = dbContext;
@@ -63,7 +67,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     private fromDescriptor(descriptor: FromDescriptor): SimpleQuery {
-        this.tables.addTable(descriptor.apply(this.dbContext));
+        this.tables.addTable(descriptor.apply(this.dbContext ? this.dbContext : Configuration.getDbContext()));
         return this;
     }
 
@@ -71,11 +75,15 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.fromDescriptor(clause(new FromDescriptorBuilder()).build());
     }
 
-    where(param: FilterDescriptor | FilterClause): FilteredQuery {
+    where(param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause, flow?: () => IFlowDescriptorBuilder): FilteredQuery {
         if (param instanceof FilterDescriptor) {
             return this.filterDescriptor(param);
+        } else if (param instanceof FlowDescriptor) {
+            return this.flowDescriptor(param);
+        } else if (flow) {
+            return this.flowClause(param as FlowClause, flow);
         } else {
-            return this.filterClause(param);
+            return this.filterClause(param as FilterClause);
         }
     }
 
@@ -88,6 +96,18 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.filterDescriptor(clause(new FilterDescriptorBuilder()).build());
     }
 
+    private flowDescriptor(descriptor: FlowDescriptor): FilteredQuery {
+        const source = this.tables.removeTable(descriptor.properties.sourceAlias);
+        const sink = this.tables.removeTable(descriptor.properties.sinkAlias);
+        const barrier = descriptor.properties.barrierAlias ? this.tables.removeTable(descriptor.properties.barrierAlias) : undefined;
+        this.tables.addTable(descriptor.apply(source, sink, barrier));
+        return this;
+    }
+
+    private flowClause(clause: FlowClause, flow: () => IFlowDescriptorBuilder): FilteredQuery {
+        return this.flowDescriptor(clause(flow()).build());
+    }
+
     select(columns: string[]): CompleteQuery {
         const table = this.tables.asTable();
         this.result = new Table("Query Result");
@@ -97,7 +117,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
             if (table.hasColumn(name)) {
                 this.result.addColumn(table.getColumn(name));
             } else {
-                const column = new TextColumn(`${++i}`);
+                const column = new AnyColumn(`${++i}`);
                 column.addValues(new Array(table.getSize()).fill(name));
                 this.result.addColumn(column);
             }

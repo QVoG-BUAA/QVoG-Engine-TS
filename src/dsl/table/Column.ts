@@ -57,6 +57,11 @@ export abstract class Column {
 
     abstract duplicate(schemaOnly: boolean): Column;
 
+
+    [Symbol.iterator](): Iterator<any> {
+        return this.iterator();
+    }
+
     abstract iterator(): Iterator<any>;
 }
 
@@ -107,6 +112,9 @@ export class DataColumn extends Column {
     }
 
     containsValue(value: any): boolean {
+        if (this.index) {
+            return this.containsKey(valueIndex(value));
+        }
         return this.values.includes(value);
     }
 
@@ -136,6 +144,7 @@ export class PredicateColumn extends Column {
     constructor(name: string, predicate: ValuePredicate) {
         super(name);
         this.predicate = predicate;
+        this.size = -1; // differentiate from data column
     }
 
     clear(): void {
@@ -163,15 +172,15 @@ export class PredicateColumn extends Column {
     }
 }
 
-export class TextColumn extends Column {
-    private values: string[] = [];
+export class AnyColumn extends Column {
+    private values: any[] = [];
 
     clear(): void {
         this.values = [];
         this.size = 0;
     }
 
-    addValue(value: string): void {
+    addValue(value: any): void {
         this.values.push(value);
         this.size++;
     }
@@ -184,15 +193,15 @@ export class TextColumn extends Column {
         return this.values.includes(value);
     }
 
-    duplicate(schemaOnly: boolean): TextColumn {
-        const column = new TextColumn(this.name);
+    duplicate(schemaOnly: boolean): AnyColumn {
+        const column = new AnyColumn(this.name);
         if (!schemaOnly) {
             column.addValues(this.values);
         }
         return column;
     }
 
-    iterator(): Iterator<string> {
-        return new ArrayIterator<string>(this.values);
+    iterator(): Iterator<any> {
+        return new ArrayIterator<any>(this.values);
     }
 }

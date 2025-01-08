@@ -14,7 +14,7 @@ export class FromDescriptor {
     }
 }
 
-export type FromClause = (clause: FromDescriptorBuilder) => ICanBuildFromDescriptor;
+export type FromClause = (clause: IFromDescriptorBuilder) => ICanBuildFromDescriptor;
 
 export interface IFromDescriptorBuilder {
     withData(predicate: ValuePredicate): ICanSetAlias;
@@ -31,7 +31,7 @@ export interface ICanBuildFromDescriptor {
 
 export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAlias, ICanBuildFromDescriptor {
     private choice: number = 0;
-    private alias?: string;
+    private alias: string = "";
     private predicate?: ValuePredicate;
 
     withData(predicate: ValuePredicate): ICanSetAlias {

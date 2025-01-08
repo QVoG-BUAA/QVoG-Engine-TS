@@ -1,5 +1,5 @@
-import { Configuration } from "~/Configuration";
 import { Value } from "~/graph";
+import { Configuration } from "~/Configuration";
 import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
 
 export class GraphExt {

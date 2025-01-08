@@ -1,5 +1,5 @@
 import { Table } from "~/dsl/table/Table";
-import { RowPredicate, ValuePredicate } from "~/dsl/Defines";
+import { FlowPredicate, RowPredicate, ValuePredicate } from "~/dsl/Defines";
 
 export class FilterDescriptor {
     alias: string;
@@ -11,7 +11,7 @@ export class FilterDescriptor {
     }
 }
 
-export type FilterClause = (clause: FilterDescriptorBuilder) => ICanBuildFilterDescriptor;
+export type FilterClause = (clause: IFilterDescriptorBuilder) => ICanBuildFilterDescriptor;
 
 function applyImpl(table: Table, predicate: RowPredicate): Table {
     const newTable = table.duplicate();
@@ -28,7 +28,9 @@ export interface IFilterDescriptorBuilder {
 }
 
 export interface ICanSetFilterPredicate {
-    where(predicate: ValuePredicate | RowPredicate): ICanBuildFilterDescriptor;
+    where(predicate: ValuePredicate): ICanBuildFilterDescriptor;
+    where(predicate: RowPredicate): ICanBuildFilterDescriptor;
+    where(predicate: FlowPredicate): ICanBuildFilterDescriptor;
 }
 
 export interface ICanBuildFilterDescriptor {
@@ -36,7 +38,7 @@ export interface ICanBuildFilterDescriptor {
 }
 
 export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSetFilterPredicate, ICanBuildFilterDescriptor {
-    private alias?: string;
+    private alias: string = "";
     private apply?: (table: Table) => Table;
 
     on(alias: string): ICanSetFilterPredicate {
@@ -44,11 +46,13 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
         return this;
     }
 
-    where(predicate: ValuePredicate | RowPredicate): ICanBuildFilterDescriptor {
+    where(predicate: ValuePredicate | RowPredicate | FlowPredicate): ICanBuildFilterDescriptor {
         if (predicate instanceof ValuePredicate) {
             this.apply = table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
         } else if (predicate instanceof RowPredicate) {
             this.apply = table => applyImpl(table, predicate);
+        } else if (predicate instanceof FlowPredicate) {
+            this.apply = table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
         } else {
             throw new Error("Invalid predicate type");
         }

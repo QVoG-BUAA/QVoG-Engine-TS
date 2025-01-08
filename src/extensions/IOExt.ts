@@ -3,6 +3,7 @@ import * as fs from "fs";
 export interface PrintStream {
     print(text: string): void;
     println(text: string): void;
+    close(): void;
 }
 
 export class ConsolePrintStream implements PrintStream {
@@ -13,6 +14,10 @@ export class ConsolePrintStream implements PrintStream {
     println(text: string): void {
         this.print(text + "\n");
     }
+
+    close(): void {
+        // Do nothing
+    }
 }
 
 export class FilePrintStream implements PrintStream {
@@ -20,26 +25,20 @@ export class FilePrintStream implements PrintStream {
     private append: boolean;
 
     constructor(file: string, append: boolean) {
-        fs.open(file, append ? "a" : "w", (err, fd) => {
-            if (err) {
-                throw new Error(`Cannot open file ${file}`);
-            } else {
-                this.fd = fd;
-            }
-        });
+        this.fd = fs.openSync(file, append ? "a" : "w");
         this.append = append;
     }
 
     print(text: string): void {
-        fs.write(this.fd, text, (err) => {
-            if (err) {
-                throw new Error("Cannot write to file");
-            }
-        });
+        fs.writeSync(this.fd, text);
     }
 
     println(text: string): void {
         this.print(text + "\n");
+    }
+
+    close(): void {
+        fs.closeSync(this.fd);
     }
 }
 

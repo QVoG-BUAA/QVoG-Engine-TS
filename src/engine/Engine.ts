@@ -1,9 +1,9 @@
+import { DbContext } from "~/db/DbContext";
+import { Queryable } from "~/engine/Defines";
+import { Configuration } from "~/Configuration";
 import { Query, QueryDescriptor } from "~/dsl/fluent/QueryDescriptor";
 import { ConsolePrintStream, FileUtils, PrintStream } from "~/extensions/IOExt";
-import { ConsoleJsonResultFormatter, IResultFormatter } from "./ResultFormatter";
-import { DbContext } from "~/db/DbContext";
-import { Configuration } from "~/Configuration";
-import { Queryable } from "~/engine/Defines";
+import { ConsoleJsonResultFormatter, IResultFormatter } from "~/engine/ResultFormatter";
 
 export class QVoGEngine {
     private static instance: QVoGEngine;
@@ -50,6 +50,7 @@ export class QVoGEngine {
     }
 
     withOutput(output: PrintStream): QVoGEngine {
+        this.output.close();
         this.output = output;
         return this;
     }
@@ -80,6 +81,7 @@ export class QVoGEngine {
 
     close(): void {
         this.output.println(`Total execution time: ${this.totalExecutionTime}ms`);
+        this.output.close();
         Configuration.getDbContext().close();
         this.log.info("QVoG Engine closed");
     }
