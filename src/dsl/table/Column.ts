@@ -1,5 +1,5 @@
 import { Value } from "~/graph/values/Value";
-import { ValuePredicate } from "~/dsl/Defines";
+import { ValuePredicate } from "~/dsl/Predicates";
 import { ArrayIterator } from "~/extensions/Iterator";
 
 type Index = Map<number, number>;
@@ -25,6 +25,11 @@ export abstract class Column {
         return this.size;
     }
 
+    /**
+     * Predicate column has size of -1, so it is safe to use
+     * this method to check if the column is empty.
+     * @returns true if the column is empty, false otherwise
+     */
     isEmpty(): boolean {
         return this.size === 0;
     }
@@ -112,7 +117,7 @@ export class DataColumn extends Column {
     }
 
     containsValue(value: any): boolean {
-        if (this.index) {
+        if (this.index && value != null) {
             return this.containsKey(valueIndex(value));
         }
         return this.values.includes(value);

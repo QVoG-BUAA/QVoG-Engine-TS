@@ -15,12 +15,12 @@ export class Table {
         return this.name;
     }
 
+    /**
+     * @warning If the table contains predicate column, then this size
+     * is invalid.
+     */
     getSize(): number {
         return this.size;
-    }
-
-    isEmpty(): boolean {
-        return this.size === 0;
     }
 
     clear(): void {
@@ -35,7 +35,7 @@ export class Table {
         }
 
         if (this.hasColumn(column.getName())) {
-            throw new Error(`Column with name ${column.getName()} already exists`);
+            throw new Error(`Column with name "${column.getName()}" already exists`);
         }
 
         const newSize = Math.max(this.size, column.getSize());
@@ -59,7 +59,7 @@ export class Table {
     getColumn(name: string): Column {
         const column = this.columns.find(column => column.getName() === name);
         if (!column) {
-            throw new Error(`Column with name ${name} does not exist`);
+            throw new Error(`Column with name "${name}" does not exist`);
         }
         return column;
     }
@@ -148,7 +148,7 @@ export class TableSet {
 
     addTable(table: Table): void {
         if (this.tables.has(table.getName())) {
-            throw new Error(`Table with name ${table.getName()} already exists`);
+            throw new Error(`Table with name "${table.getName()}" already exists`);
         }
         this.tables.set(table.getName(), table);
     }
@@ -156,7 +156,7 @@ export class TableSet {
     removeTable(name: string): Table {
         const table = this.tables.get(name);
         if (!table) {
-            throw new Error(`Table with name ${name} does not exist`);
+            throw new Error(`Table with name "${name}" does not exist`);
         }
         this.tables.delete(name);
         return table;
@@ -165,7 +165,7 @@ export class TableSet {
     getTable(name: string): Table {
         const table = this.tables.get(name);
         if (!table) {
-            throw new Error(`Table with name ${name} does not exist`);
+            throw new Error(`Table with name "${name}" does not exist`);
         }
         return table;
     }

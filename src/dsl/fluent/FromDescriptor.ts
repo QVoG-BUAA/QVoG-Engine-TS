@@ -1,6 +1,6 @@
 import { Table } from "~/dsl/table/Table";
 import { DbContext } from "~/db/DbContext";
-import { ValuePredicate } from "~/dsl/Defines";
+import { ValuePredicate, ValuePredicateFn } from "~/dsl/Predicates";
 import { Configuration } from "~/Configuration";
 import { PredicateColumn } from "~/dsl/table/Column";
 
@@ -17,8 +17,8 @@ export class FromDescriptor {
 export type FromClause = (clause: IFromDescriptorBuilder) => ICanBuildFromDescriptor;
 
 export interface IFromDescriptorBuilder {
-    withData(predicate: ValuePredicate): ICanSetAlias;
-    withPredicate(predicate: ValuePredicate): ICanSetAlias;
+    withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
+    withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
 }
 
 export interface ICanSetAlias {
@@ -34,15 +34,15 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     private alias: string = "";
     private predicate?: ValuePredicate;
 
-    withData(predicate: ValuePredicate): ICanSetAlias {
+    withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 0;
-        this.predicate = predicate;
+        this.predicate = (predicate instanceof ValuePredicate) ? predicate : ValuePredicate.of(predicate);
         return this;
     }
 
-    withPredicate(predicate: ValuePredicate): ICanSetAlias {
+    withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 1;
-        this.predicate = predicate;
+        this.predicate = (predicate instanceof ValuePredicate) ? predicate : ValuePredicate.of(predicate);
         return this;
     }
 

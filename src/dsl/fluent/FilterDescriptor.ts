@@ -1,5 +1,5 @@
 import { Table } from "~/dsl/table/Table";
-import { FlowPredicate, RowPredicate, ValuePredicate } from "~/dsl/Defines";
+import { FlowPredicate, RowPredicate, ValuePredicate } from "~/dsl/Predicates";
 
 export class FilterDescriptor {
     alias: string;

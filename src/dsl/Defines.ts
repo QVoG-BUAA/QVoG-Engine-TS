@@ -4,48 +4,8 @@ import { Configuration } from "~/Configuration";
 import { CodeNode, FileNode } from "~/graph/Node";
 import { ArrayIterator } from "~/extensions/Iterator";
 
-export class ValuePredicate {
-    test: (value: Value) => boolean;
-
-    constructor(test: (value: Value) => boolean) {
-        this.test = test;
-    }
-
-    static of(predicate: (value: Value) => boolean): ValuePredicate {
-        return new ValuePredicate(predicate);
-    }
-
-    static any(): ValuePredicate {
-        return new ValuePredicate(() => true);
-    }
-
-    static none(): ValuePredicate {
-        return new ValuePredicate(() => false);
-    }
-}
-
 export type Row = Map<string, any>;
 export type RowWithoutHeader = Array<any>;
-
-export class RowPredicate {
-    test: (row: Row) => boolean;
-
-    constructor(test: (row: Row) => boolean) {
-        this.test = test;
-    }
-
-    static of(predicate: (row: Row) => boolean): RowPredicate {
-        return new RowPredicate(predicate);
-    }
-
-    static any(): RowPredicate {
-        return new RowPredicate(() => true);
-    }
-
-    static none(): RowPredicate {
-        return new RowPredicate(() => false);
-    }
-}
 
 export type FlowStep = [Value, Edge];
 export type OptionalFlowStep = [Value, Edge?];
@@ -151,25 +111,5 @@ export class FlowPath {
 
     iterator(): Iterator<Value> {
         return new ArrayIterator(this.path);
-    }
-}
-
-export class FlowPredicate {
-    test: (path: FlowPath) => boolean;
-
-    constructor(test: (path: FlowPath) => boolean) {
-        this.test = test;
-    }
-
-    static of(predicate: (path: FlowPath) => boolean): FlowPredicate {
-        return new FlowPredicate(predicate);
-    }
-
-    static any(): FlowPredicate {
-        return new FlowPredicate(() => true);
-    }
-
-    static none(): FlowPredicate {
-        return new FlowPredicate(() => false);
     }
 }

@@ -7,7 +7,7 @@ export abstract class IResultFormatter {
 
 export class DefaultResultFormatter extends IResultFormatter {
     format(result: QueryResult): string {
-        return `Query ${result.name} executed in ${result.milliseconds}ms (${result.milliseconds / 1000}s)\n${result.result}`;
+        return `Query ${result.name} executed in ${result.milliseconds}ms (${result.milliseconds / 1000}s)\n${result.result}\n`;
     }
 
     formatTotalTime(milliseconds: number): string {

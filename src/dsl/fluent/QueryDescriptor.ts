@@ -149,6 +149,9 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
 
     private formatRow(row: any[]): string[] {
         return row.map(value => {
+            if (value == null || value === undefined) {
+                return "null";
+            }
             if (value instanceof Value) {
                 return GraphExt.format(value);
             }

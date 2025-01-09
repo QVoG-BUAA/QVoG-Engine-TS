@@ -50,7 +50,7 @@ export class TablePrettifier {
             }
             result += "\n";
         }
-        result += "\n";
+        
         return result;
     }
 

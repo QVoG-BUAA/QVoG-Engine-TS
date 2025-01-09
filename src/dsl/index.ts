@@ -1,4 +1,5 @@
 export * from "./Defines";
+export * from "./Predicates";
 
 export * from "./fluent/FlowDescriptor";
 export * from "./fluent/FilterDescriptor";

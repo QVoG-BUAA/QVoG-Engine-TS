@@ -1,5 +1,5 @@
 import { DbContext } from "~/db/DbContext";
-import { Queryable } from "~/engine/Defines";
+import { Queryable, QueryResult } from "~/engine/Defines";
 import { Configuration } from "~/Configuration";
 import { Query, QueryDescriptor } from "~/dsl/fluent/QueryDescriptor";
 import { ConsolePrintStream, FileUtils, PrintStream } from "~/extensions/IOExt";
@@ -89,7 +89,13 @@ export class QVoGEngine {
     private executeImpl(name: string, query: Query): void {
         this.log.info(`Executing query ${name}`);
         const start = Date.now();
-        const result = query(new QueryDescriptor().withDatabase(Configuration.getDbContext())).toString(this.style!);
+        let result: string;
+        try {
+            result = query(new QueryDescriptor().withDatabase(Configuration.getDbContext())).toString(this.style!);
+        } catch (error) {
+            this.log.error(`Error executing query "${name}"`, error);
+            result = `Error executing query "${name}": ${error}`;
+        }
         const end = Date.now();
         const executionTime = end - start;
         this.log.info(`Query "${name}" executed in ${executionTime}ms`);
