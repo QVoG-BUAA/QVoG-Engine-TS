@@ -1,5 +1,5 @@
 import { FlowPath, Row } from "~/dsl/Defines";
-import { Value } from "~/graph/values/Value";
+import { Value } from "~/graph/Value";
 import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
 
 /*

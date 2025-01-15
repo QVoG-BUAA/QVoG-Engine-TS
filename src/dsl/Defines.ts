@@ -1,5 +1,5 @@
 import { Edge } from "~/db/gremlin/Defines";
-import { Value } from "~/graph/values/Value";
+import { Value } from "~/graph/Value";
 import { Configuration } from "~/Configuration";
 import { CodeNode, FileNode } from "~/graph/Node";
 import { ArrayIterator } from "~/extensions/Iterator";

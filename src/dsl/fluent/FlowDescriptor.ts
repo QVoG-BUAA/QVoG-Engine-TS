@@ -1,5 +1,5 @@
 import { Table } from "~/dsl/table/Table";
-import { Value } from "~/graph/values/Value";
+import { Value } from "~/graph/Value";
 import { ValuePredicate } from "~/dsl/Predicates";
 import { AnyColumn, Column, DataColumn, PredicateColumn } from "~/dsl/table/Column";
 

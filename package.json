@@ -20,7 +20,6 @@
   "author": "Tony S.",
   "license": "Apache-2.0",
   "dependencies": {
-    "@types/gremlin": "^3.6.7",
     "deasync": "^0.1.30",
     "gremlin": "^3.4.3",
     "tslog": "^4.9.3"
@@ -28,6 +27,7 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/deasync": "^0.1.5",
+    "@types/gremlin": "^3.6.7",
     "@types/node": "^22.10.1",
     "eslint": "^9.17.0",
     "tsup": "^8.3.5",

@@ -1,7 +1,7 @@
 import { AstJson } from "~/graph/Defines";
 import { Configuration } from "~/Configuration";
 import { ValueFactory } from "~/graph/Specification";
-import { UnknownValue, Value } from "~/graph/values/Value";
+import { InvalidValue, Value } from "~/graph/Value";
 import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
 import { Vertex, VertexProperty } from "~/db/gremlin/Defines";
 
@@ -89,7 +89,7 @@ export class Context {
         };
 
         const node = new CodeNode(vertex, props);
-        const value = this.factory.build(json, new UnknownValue(json._type));
+        const value = this.factory.buildValue(json, new InvalidValue(json._type));
         value.setId(node.getId());
 
         return [node, value];
@@ -101,7 +101,7 @@ export class Context {
         };
 
         const node = new FileNode(vertex, props);
-        const value = new UnknownValue("file");
+        const value = new InvalidValue("file");
         value.setId(node.getId());
 
         return [node, value];

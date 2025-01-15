@@ -1,10 +1,15 @@
 import { GraphNode } from "~/graph/Node";
 import { Configuration } from "~/Configuration";
 import { Stream } from "~/extensions/Stream";
-import { ArrayIterableIterator } from "~/extensions";
+import { InvalidType, Type } from "~/graph/Type";
 
 export abstract class Value {
     private id?: number;
+
+    /**
+     * Every value should have a type, and we use `InvalidType` as the default.
+     */
+    private type: Type = new InvalidType();
 
     private identifier: string;
     private supported: boolean;
@@ -32,6 +37,14 @@ export abstract class Value {
         return this.id;
     }
 
+    setType(type: Type): void {
+        this.type = type;
+    }
+
+    getType(): Type {
+        return this.type;
+    }
+
     getIdentifier(): string {
         return this.identifier;
     }
@@ -57,7 +70,7 @@ export abstract class Value {
     }
 }
 
-export class UnknownValue extends Value {
+export class InvalidValue extends Value {
     constructor(identifier: string) {
         super(identifier, false);
     }

@@ -1,4 +1,4 @@
-import { Value } from "~/graph/values/Value";
+import { Value } from "~/graph/Value";
 import { ValuePredicate } from "~/dsl/Predicates";
 import { ArrayIterator } from "~/extensions/Iterator";
 

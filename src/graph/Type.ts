@@ -20,14 +20,14 @@ export abstract class Type {
     getOrigin(): Origin {
         return this.origin;
     }
-
+    
     setOrigin(origin: Origin): void {
         this.origin = origin;
     }
 }
 
-export class UnknownType extends Type {
-    constructor() {
-        super("unknown", Origin.Unknown);
+export class InvalidType extends Type {
+    constructor(name: string = "invalid") {
+        super("invalid", Origin.Unknown);
     }
 }
