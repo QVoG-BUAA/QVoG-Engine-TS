@@ -18,6 +18,16 @@ To build the project, run the following command:
 npm run build
 ```
 
+To build the documentation, run the following command:
+
+```bash
+npm run docs
+```
+
+The documentation will be generated in the `docs` folder.
+
+## Usage
+
 Since it is a library, it is not necessary to run the project. To make it a local module, run the following command:
 
 ```bash

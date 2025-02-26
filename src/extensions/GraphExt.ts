@@ -2,7 +2,18 @@ import { Value } from "~/graph";
 import { Configuration } from "~/Configuration";
 import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
 
+/**
+ * Utility functions for graph operations.
+ * 
+ * @category Extension
+ */
 export class GraphExt {
+    /**
+     * Format a graph node into a human-readable string.
+     * 
+     * @param obj Can be vertex ID, GraphNode or Value.
+     * @returns Formatted string.
+     */
     static format(obj: number | GraphNode | Value): string {
         const context = Configuration.getContext();
         let node: GraphNode;

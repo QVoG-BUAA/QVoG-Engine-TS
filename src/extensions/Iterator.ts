@@ -1,3 +1,8 @@
+/**
+ * Iterator for an array.
+ * 
+ * @category Extension
+ */
 export class ArrayIterator<T> implements Iterator<T> {
     private array: T[];
     private index: number;
@@ -22,6 +27,11 @@ export class ArrayIterator<T> implements Iterator<T> {
     }
 }
 
+/**
+ * Iterable iterator for an array.
+ * 
+ * @category Extension
+ */
 export class ArrayIterableIterator<T> implements IterableIterator<T> {
     private array: T[];
     private index: number;

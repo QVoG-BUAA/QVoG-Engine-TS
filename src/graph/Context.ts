@@ -1,13 +1,21 @@
 import { AstJson } from "~/graph/Defines";
 import { Configuration } from "~/Configuration";
-import { ValueFactory } from "~/graph/Specification";
 import { InvalidValue, Value } from "~/graph/Value";
+import { ValueFactory } from "~/graph/Specification";
 import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
 import { Vertex, VertexProperty } from "~/db/gremlin/Defines";
 
 type NodeRegistration = [GraphNode, Value];
 type NodeRegistry = Map<number, NodeRegistration>;
 
+/**
+ * Context to manage the graph nodes and values.
+ * 
+ * One execution of the engine will have one context shared across all queries.
+ * {@link Value | `Value`} will be cached in the context to avoid re-parsing the AST.
+ * 
+ * @category Graph
+ */
 export class Context {
     private log = Configuration.getLogger("Context");
 
@@ -18,10 +26,31 @@ export class Context {
         this.factory = factory;
     }
 
+    /**
+     * Get the AST value associated with a node.
+     * 
+     * If vertex or vertex id is provided, and the corresponding node does not exist,
+     * it will first parse the vertex and register the node, then return the value.
+     * 
+     * @param key A value that can be used to identify a node.
+     * @returns The value associated with the key.
+     */
     getValue(key: Vertex | GraphNode | number): Value {
         return this.getRegistration(key)[1];
     }
 
+    /**
+     * Get the complete node associated with a key.
+     * 
+     * If vertex or vertex id is provided, and the corresponding node does not exist,
+     * it will first parse the vertex and register the node, then return the node.
+     * 
+     * You may need this to get the node from a value, as the value does not contain
+     * the code or file information.
+     * 
+     * @param key A value that can be used to identify a node.
+     * @returns The node associated with the key.
+     */
     getNode(key: Vertex | Value | number): GraphNode {
         return this.getRegistration(key)[0];
     }
@@ -70,6 +99,8 @@ export class Context {
         }
         this.registry.set(registration[0].getId(), registration);
 
+        this.log.trace(`Registered node: ${registration[0].getId()}`);
+
         return registration;
     }
 
@@ -89,7 +120,7 @@ export class Context {
         };
 
         const node = new CodeNode(vertex, props);
-        const value = this.factory.buildValue(json, new InvalidValue(json._type));
+        const value = this.factory.buildValue(json);
         value.setId(node.getId());
 
         return [node, value];

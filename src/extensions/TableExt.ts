@@ -1,11 +1,26 @@
+/**
+ * Format result table into a prettified string.
+ * 
+ * @category Extension
+ */
 export class TablePrettifier {
     private headers: string[] = [];
     private rows: Array<Array<string>> = [];
 
+    /**
+     * Add a header to the table.
+     * 
+     * @param header Header to add.
+     */
     addHeader(header: string): void {
         this.headers.push(header);
     }
 
+    /**
+     * Add a row to the table. Row size must match header size.
+     * 
+     * @param row Row to add.
+     */
     addRow(row: Array<string>): void {
         if (row.length !== this.headers.length) {
             throw new Error("Row size must match header size");
@@ -14,13 +29,18 @@ export class TablePrettifier {
     }
 
     /**
+     * Output the table as a string with the specified format.
+     *
+     * The format can be one of the following:
      * 
-     * @param format Can be one of the following:
-     * -     markdown: Markdown syntax
-     * -         json: JSON with indentation of 4 spaces
+     * - markdown: Markdown syntax
+     * - json: JSON with indentation of 4 spaces
      * - json-compact: JSON without indentation and newlines
+     * 
+     * @param format The output format.
+     * @returns The table as a string in the specified format.
      */
-    toString(format: string) {
+    toString(format: string): string {
         switch (format) {
             case "markdown":
                 return this.toMarkdown();
@@ -50,7 +70,7 @@ export class TablePrettifier {
             }
             result += "\n";
         }
-        
+
         return result;
     }
 

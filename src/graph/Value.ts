@@ -1,17 +1,18 @@
 import { GraphNode } from "~/graph/Node";
-import { Configuration } from "~/Configuration";
 import { Stream } from "~/extensions/Stream";
+import { Configuration } from "~/Configuration";
 import { InvalidType, Type } from "~/graph/Type";
+import { AstJson } from "./Defines";
 
+/**
+ * Base class for all values.
+ * 
+ * @category Graph
+ */
 export abstract class Value {
     private id?: number;
-
-    /**
-     * Every value should have a type, and we use `InvalidType` as the default.
-     */
-    private type: Type = new InvalidType();
-
     private identifier: string;
+    private type: Type = new InvalidType();
     private supported: boolean;
 
     constructor(identifier: string, supported: boolean = true) {
@@ -20,7 +21,10 @@ export abstract class Value {
     }
 
     /**
-     * This is an intrusive method that invokes a global call.
+     * Value only represents the AST of the node in the database, use this 
+     * method to get the complete node.
+     * 
+     * @returns The complete node in the graph database this value is associated with.
      */
     getNode(): GraphNode {
         return Configuration.getContext().getNode(this);
@@ -30,6 +34,9 @@ export abstract class Value {
         this.id = id;
     }
 
+    /**
+    * Get the id of the vertex in the graph database this value represents.
+    */
     getId(): number {
         if (!this.id) {
             throw new Error("Value id not available");
@@ -37,18 +44,34 @@ export abstract class Value {
         return this.id;
     }
 
-    setType(type: Type): void {
-        this.type = type;
-    }
-
-    getType(): Type {
-        return this.type;
-    }
-
+    /**
+     * The syntax component identifier, i.e. ArkAssignStmt.
+     * 
+     * @returns The identifier.
+     */
     getIdentifier(): string {
         return this.identifier;
     }
 
+    setType(type: Type): void {
+        this.type = type;
+    }
+
+    /**
+     * By default, the value has an invalid type, see {@link InvalidType | `InvalidType`}.
+     * 
+     * @returns The type of this value.
+     */
+    getType(): Type {
+        return this.type;
+    }
+
+    /**
+     * Values that cannot be parsed from AST will be marked as unsupported.
+     * Usually, only{@link InvalidValue | `InvalidValue`} should be marked as unsupported.
+     * 
+     * @returns Whether this value is supported by the current implementation.
+     */
     isSupported(): boolean {
         return this.supported;
     }
@@ -56,6 +79,10 @@ export abstract class Value {
     /**
      * This method is used to get the stream representation of this value.
      * It depends on the implementation of the `elements` method.
+     * 
+     * See {@link Stream | `Stream`} for stream operations.
+     * 
+     * @returns A stream of values.
      */
     stream(): Stream<Value> {
         return new Stream(this.elements());
@@ -63,15 +90,33 @@ export abstract class Value {
 
     /**
      * Implement this method to return all children of this value.
-     * @note Do not call this method directly, use the `stream` method instead.
      */
-    *elements(): IterableIterator<Value> {
+    protected *elements(): IterableIterator<Value> {
         yield this;
     }
 }
 
+/**
+ * Represents a value that could not be parsed from the AST.
+ * 
+ * @category Graph
+ */
 export class InvalidValue extends Value {
     constructor(identifier: string) {
         super(identifier, false);
+    }
+
+    /**
+     * A factory method to create an instance of InvalidValue.
+     * 
+     * @param spec Identifier or the AST json.
+     * @returns An instance of InvalidValue.
+     */
+    static get(spec: string | AstJson): InvalidValue {
+        if (typeof spec === "string") {
+            return new InvalidValue(spec);
+        } else {
+            return new InvalidValue(spec._identifier);
+        }
     }
 }

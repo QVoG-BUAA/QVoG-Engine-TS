@@ -1,15 +1,34 @@
-import { Edge } from "~/db/gremlin/Defines";
 import { Value } from "~/graph/Value";
+import { Edge } from "~/db/gremlin/Defines";
 import { Configuration } from "~/Configuration";
 import { CodeNode, FileNode } from "~/graph/Node";
 import { ArrayIterator } from "~/extensions/Iterator";
 
+/**
+ * @category DSL Data
+ */
 export type Row = Map<string, any>;
+
+/**
+ * @category DSL Data
+ */
 export type RowWithoutHeader = Array<any>;
 
+/**
+ * @category DSL Data
+ */
 export type FlowStep = [Value, Edge];
+
+/**
+ * @category DSL Data
+ */
 export type OptionalFlowStep = [Value, Edge?];
 
+/**
+ * The flow used in flow action as intermediate data structure.
+ * 
+ * @category DSL Data
+ */
 export class FlowStream {
     private stream: OptionalFlowStep[];
 
@@ -17,10 +36,20 @@ export class FlowStream {
         this.stream = stream ? [...stream] : [];
     }
 
+    /**
+     * Get the size of the flow, i.e. the number of steps.
+     * 
+     * @returns The size of the flow.
+     */
     getSize(): number {
         return this.stream.length;
     }
 
+    /**
+     * Add a step to the flow.
+     * 
+     * @param step Step to add.
+     */
     add(step: OptionalFlowStep) {
         this.stream.push(step);
     }
@@ -53,11 +82,24 @@ export class FlowStream {
         return this.iterator();
     }
 
+    /**
+     * Get the iterator to iterate over the steps in the flow.
+     * 
+     * @returns The iterator.
+     */
     iterator(): Iterator<OptionalFlowStep> {
         return new ArrayIterator(this.stream);
     }
 }
 
+/**
+ * A flow of {@link Value | `Value`}.
+ * 
+ * This is returned by the flow action as final representation of a flow
+ * from the source to the sink.
+ * 
+ * @category DSL Data
+ */
 export class FlowPath {
     private path: Value[];
 
@@ -65,22 +107,52 @@ export class FlowPath {
         this.path = path ? [...path] : [];
     }
 
+    /**
+     * Get the size of the path, i.e. the number of steps.
+     * 
+     * @returns The size.
+     */
     getSize(): number {
         return this.path.length;
     }
 
+    /**
+     * Add a step to the path.
+     * @param step Step to add.
+     */
     add(step: Value) {
         this.path.push(step);
     }
 
+    /**
+     * The path as an array of {@link Value | `Value`}.
+     * 
+     * @returns The path.
+     */
     getPath(): Value[] {
         return this.path;
     }
 
+    /**
+     * Duplicate the path.
+     * 
+     * @returns A copy of the path.
+     */
     clone(): FlowPath {
         return new FlowPath(this.path);
     }
 
+    /**
+     * Convert the path to a string.
+     * 
+     * The string representation is as follows:
+     * 
+     * ```
+     * <lineno> -> <lineno> -> ...
+     * ```
+     * 
+     * @returns A string description of the path.
+     */
     toString(): string {
         const context = Configuration.getContext();
         let result = "";
@@ -109,6 +181,11 @@ export class FlowPath {
         return this.iterator();
     }
 
+    /**
+     * Get the iterator to iterate over the steps in the path.
+     * 
+    * @returns The iterator.
+     */
     iterator(): Iterator<Value> {
         return new ArrayIterator(this.path);
     }

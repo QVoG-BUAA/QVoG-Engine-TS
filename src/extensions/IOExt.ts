@@ -1,11 +1,21 @@
 import * as fs from "fs";
 
+/**
+ * Print stream interface.
+ * 
+ * @category Extension
+ */
 export interface PrintStream {
     print(text: string): void;
     println(text: string): void;
     close(): void;
 }
 
+/**
+ * Print stream that writes to the console.
+ * 
+ * @category Extension
+ */
 export class ConsolePrintStream implements PrintStream {
     print(text: string): void {
         process.stdout.write(text);
@@ -20,6 +30,11 @@ export class ConsolePrintStream implements PrintStream {
     }
 }
 
+/**
+ * Print stream that writes to a file.
+ * 
+ * @category Extension
+ */
 export class FilePrintStream implements PrintStream {
     private fd: number = 0;
     private append: boolean;
@@ -42,6 +57,11 @@ export class FilePrintStream implements PrintStream {
     }
 }
 
+/**
+ * Utility functions for file operations.
+ * 
+ * @category Extension
+ */
 export class FileUtils {
     static readTextFile(file: string): string {
         return fs.readFileSync(file, "utf8");

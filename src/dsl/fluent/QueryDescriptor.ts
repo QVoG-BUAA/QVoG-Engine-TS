@@ -1,12 +1,12 @@
 import { Value } from "~/graph";
 import { DbContext } from "~/db/DbContext";
-import { Configuration } from "~/Configuration";
 import { AnyColumn } from "~/dsl/table/Column";
+import { Configuration } from "~/Configuration";
 import { GraphExt } from "~/extensions/GraphExt";
 import { Table, TableSet } from "~/dsl/table/Table";
 import { TablePrettifier } from "~/extensions/TableExt";
-import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from "~/dsl/fluent/FlowDescriptor";
 import { FromClause, FromDescriptor, FromDescriptorBuilder } from "~/dsl/fluent/FromDescriptor";
+import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from "~/dsl/fluent/FlowDescriptor";
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from "~/dsl/fluent/FilterDescriptor";
 
 export interface ICanConfigure {
@@ -47,17 +47,47 @@ export interface IQueryDescriptor {
     withDatabase(dbContext: DbContext): InitialQuery;
 }
 
+/**
+ * Describes a query, which is used to build complex queries in a fluent manner.
+ * 
+ * All you need is to combine {@link from | `from`}, {@link where | `where`}, and
+ * {@link select | `select`} clauses to build a query.
+ * 
+ * You can use multiple {@link from | `from`} to fetch tables from the database. Then,
+ * use {@link where | `where`} to filter the tables with filter or flow actions. Finally,
+ * use {@link select | `select`} to display specific columns from the result table.
+ * 
+ * > [!WARNING]
+ * > Make sure there is only one table left before calling {@link select | `select`}.
+ * > You can use flow actions to merge tables into one, see {@link FlowDescriptor | `FlowDescriptor`}
+ * > for more information.
+ * 
+ * @category DSL API
+ */
 export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQuery, FilteredQuery, CompleteQuery {
     private tables: TableSet = new TableSet();
     private result?: Table;
 
     private dbContext?: DbContext;
 
+    /**
+     * Set the database context the query uses.
+     * 
+     * @param dbContext Database context.
+     */
     withDatabase(dbContext: DbContext): InitialQuery {
         this.dbContext = dbContext;
         return this;
     }
 
+    /**
+     * Add a table to the query.
+     * 
+     * You can provide a pre-built {@link FromDescriptor | `FromDescriptor`} or use a
+     * {@link FromClause | `FromClause`} to build it on demand.
+     * 
+     * @param param From descriptor or clause.
+     */
     from(param: FromDescriptor | FromClause): SimpleQuery {
         if (param instanceof FromDescriptor) {
             return this.fromDescriptor(param);
@@ -75,6 +105,16 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.fromDescriptor(clause(new FromDescriptorBuilder()).build());
     }
 
+    /**
+     * Apply a filter or flow action to the query.
+     * 
+     * Use {@link FilterDescriptor | `FilterDescriptor`} to filter tables, or use
+     * {@link FlowDescriptor | `FlowDescriptor`} for flow actions to find path problems.
+     * 
+     * @param param Filter/flow descriptor or clause.
+     * @param flow Only required when `param` is {@link FlowDescriptor | `FlowDescriptor`}
+     *      or {@link FlowClause | `FlowClause`}.
+     */
     where(param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause, flow?: () => IFlowDescriptorBuilder): FilteredQuery {
         if (param instanceof FilterDescriptor) {
             return this.filterDescriptor(param);
@@ -108,6 +148,17 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.flowDescriptor(clause(flow()).build());
     }
 
+    /**
+     * Select columns from the result table.
+     * 
+     * The result column order is the same as the order of the columns in
+     * the `columns` array.
+     * 
+     * > [!WARNING]
+     * > Make sure there is only one table left.
+     * 
+     * @param columns Columns to select from the result table.
+     */
     select(columns: string[]): CompleteQuery {
         const table = this.tables.asTable();
         this.result = new Table("Query Result");
@@ -126,8 +177,13 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     /**
-     * @param style @see TablePrettifier
-     * @returns The result of the query in the specified style
+     * Output the result of the query as a string with the specified style.
+     * 
+     * See the format of {@link TablePrettifier.toString | `TablePrettifier.toString`}
+     * for available styles.
+     * 
+     * @param style The output style.
+     * @returns The result of the query in the specified style.
      */
     toString(style: string): string {
         const prettifier = new TablePrettifier();
@@ -160,4 +216,9 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 }
 
+/**
+ * Clause to build a query.
+ * 
+ * @category DSL API
+ */
 export type Query = (descriptor: InitialQuery) => CompleteQuery;

@@ -3,11 +3,17 @@ import deasync from "deasync";
 import { Table } from "~/dsl/table/Table";
 import { Context } from "~/graph/Context";
 import { Vertex } from "~/db/gremlin/Defines";
-import { ValuePredicate } from "~/dsl/Predicates";
 import { Configuration } from "~/Configuration";
 import { DataColumn } from "~/dsl/table/Column";
+import { ValuePredicate } from "~/dsl/Predicates";
 import { GremlinConnection } from "~/db/gremlin/Connection";
 
+/**
+ * Filter the graph database to get table of {@link Value | `Value`} that
+ * satisfy the predicate.
+ * 
+ * @category Extension
+ */
 export class GraphFilter {
     private log = Configuration.getLogger("GraphFilter");
 
@@ -19,16 +25,35 @@ export class GraphFilter {
         this.context = context;
     }
 
-    withConnection(connection: GremlinConnection) {
+    /**
+     * Set the connection to use for filtering.
+     * 
+     * @param connection Gremlin connection.
+     * @returns Itself for chaining.
+     */
+    withConnection(connection: GremlinConnection): GraphFilter {
         this.connection = connection;
         return this;
     }
 
-    withPredicate(predicate: ValuePredicate) {
+    /**
+     * Set the predicate to use for filtering. After filtering, only vertices that
+     * satisfy the predicate will be included in the result.
+     * 
+     * @param predicate Filter predicate.
+     * @returns Itself for chaining.
+     */
+    withPredicate(predicate: ValuePredicate): GraphFilter {
         this.predicate = predicate;
         return this;
     }
 
+    /**
+     * Filter the graph using the set connection and predicate.
+     * 
+     * @param name Name of the filtered table.
+     * @returns The filtered table.
+     */
     filter(name: string): Table {
         if (!this.connection) {
             throw new Error("Connection is not set");
