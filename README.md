@@ -29,7 +29,19 @@ The documentation will be generated in the `docs` folder.
 
 ## Usage
 
-Since it is a library, it is not necessary to run the project. To make it a local module, run the following command:
+### NPM Package
+
+It has been published to NPM registry: [qvog-engine](https://www.npmjs.com/package/qvog-engine).
+
+To install the package, run the following command:
+
+```bash
+npm install qvog-engine
+```
+
+### Local Package
+
+If you want to use the latest version of the library, you can build and link it locally. The package will be automatically updated when you build the project.
 
 ```bash
 npm link

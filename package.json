@@ -1,6 +1,6 @@
 {
   "name": "qvog-engine",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "QVoG Engine",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -35,5 +35,12 @@
     "typedoc": "^0.27.9",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QVoG-BUAA/QVoG-Engine-TS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/QVoG-BUAA/QVoG-Engine-TS/issues"
   }
 }
