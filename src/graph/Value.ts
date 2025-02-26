@@ -58,7 +58,7 @@ export abstract class Value {
     }
 
     /**
-     * By default, the value has an invalid type, see {@link InvalidType | `InvalidType`}.
+     * By default, the value has an invalid type, see `InvalidType`.
      * 
      * @returns The type of this value.
      */
@@ -68,7 +68,7 @@ export abstract class Value {
 
     /**
      * Values that cannot be parsed from AST will be marked as unsupported.
-     * Usually, only{@link InvalidValue | `InvalidValue`} should be marked as unsupported.
+     * Usually, only `InvalidValue` should be marked as unsupported.
      * 
      * @returns Whether this value is supported by the current implementation.
      */
@@ -80,7 +80,7 @@ export abstract class Value {
      * This method is used to get the stream representation of this value.
      * It depends on the implementation of the `elements` method.
      * 
-     * See {@link Stream | `Stream`} for stream operations.
+     * See `Stream` for stream operations.
      * 
      * @returns A stream of values.
      */
