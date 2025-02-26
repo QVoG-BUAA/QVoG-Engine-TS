@@ -42,16 +42,46 @@ function applyImpl(table: Table, predicate: RowPredicate): Table {
 }
 
 export interface IFilterDescriptorBuilder {
+    /**
+     * Specify the table to filter.
+     * 
+     * @param alias Alias of the table to filter.
+     */
     on(alias: string): ICanSetFilterPredicate;
 }
 
 export interface ICanSetFilterPredicate {
+    /**
+     * Filter the table using {@link ValuePredicate | `ValuePredicate`}.
+     * 
+     * It will apply the predicate on the column with the same name as the alias of the
+     * table, and assumes that the column contains {@link Value | `Value`}.
+     */
     where(predicate: ValuePredicate): ICanBuildFilterDescriptor;
+
+    /**
+     * Filter the table using {@link RowPredicate | `RowPredicate`}.
+     * 
+     * This is the most high-level predicate where you can access all columns of the row.
+     * However, you need manual type casting for each column to access the values.
+     */
     where(predicate: RowPredicate): ICanBuildFilterDescriptor;
+
+    /**
+     * Filter the table using {@link FlowPredicate | `FlowPredicate`}.
+     * 
+     * It will apply the predicate on the column with the same name as the alias of the
+     * table, and assumes that the column contains {@link FlowPath | `FlowPath`}.
+     */
     where(predicate: FlowPredicate): ICanBuildFilterDescriptor;
 }
 
 export interface ICanBuildFilterDescriptor {
+    /**
+    * Build the filter descriptor.
+    * 
+    * @returns The filter descriptor.
+    */
     build(): FilterDescriptor;
 }
 
@@ -65,9 +95,7 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
     private apply?: (table: Table) => Table;
 
     /**
-     * Specify the table to filter.
-     * 
-     * @param alias Alias of the table to filter.
+     * @inheritDoc IFilterDescriptorBuilder.on
      */
     on(alias: string): ICanSetFilterPredicate {
         this.alias = alias;
@@ -75,20 +103,7 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
     }
 
     /**
-     * Specify the predicate to filter the table.
-     * 
-     * The supported predicate types are:
-     * 
-     * - {@link RowPredicate | `RowPredicate`}: Use this if all columns of the row
-     * are needed to evaluate the predicate. This is the most high-level predicate.
-     * However, you need manual type casting to access the values of the row.
-     * - {@link ValuePredicate | `ValuePredicate`}: Only checks a single column of the
-     * row, and assumes that the column contains {@link Value | `Value`}. The column
-     * it checks has the same name as the alias of the table.
-     * - {@link FlowPredicate | `FlowPredicate`}: The same as `ValuePredicate`, but the
-     * column contains {@link FlowPath | `FlowPath`}.
-     * 
-     * @param predicate The predicate to filter the table.
+     * See {@link ICanSetFilterPredicate | `ICanSetFilterPredicate`}.
      */
     where(predicate: ValuePredicate | RowPredicate | FlowPredicate): ICanBuildFilterDescriptor {
         if (predicate instanceof ValuePredicate) {
@@ -104,9 +119,7 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
     }
 
     /**
-     * Build the filter descriptor.
-     * 
-     * @returns The filter descriptor.
+     * @inheritDoc ICanBuildFilterDescriptor.build
      */
     build(): FilterDescriptor {
         return new FilterDescriptor(this.alias!, this.apply!);

@@ -70,26 +70,54 @@ export class FlowDescriptor {
 export type FlowClause = (clause: IFlowDescriptorBuilder) => ICanBuildFlowDescriptor;
 
 export interface IFlowDescriptorBuilder extends ICanSetFlowSource {
+    /**
+     * Different flow implementation may require different configuration, which can
+     * be done by defining their own feature specifications.
+     * 
+     * @param features Custom features.
+     */
     configure(features: any): IFlowDescriptorBuilder;
 }
 
 export interface ICanSetFlowSource {
+    /**
+     * Set the source table of the flow.
+     * 
+     * @param alias Alias of the source table.
+     */
     source(alias: string): ICanSetFlowBarrier;
 }
 
 export interface ICanSetFlowSink {
+    /**
+    * Set the sink table of the flow.
+    * 
+    * @param alias Alias of the sink table.
+    */
     sink(alias: string): ICanSetFlowAlias;
 }
 
 export interface ICanSetFlowBarrier extends ICanSetFlowSink {
+    /**
+    * Set the barrier table of the flow.
+    * 
+    * @param alias Alias of the barrier table.
+    */
     barrier(alias: string): ICanSetFlowSink;
 }
 
 export interface ICanSetFlowAlias {
+    /**
+     * Set the alias of the result table.
+     * @param alias Alias of the result table.
+     */
     as(alias: string): ICanBuildFlowDescriptor;
 }
 
 export interface ICanBuildFlowDescriptor {
+    /**
+     * Build the flow descriptor.
+     */
     build(): FlowDescriptor;
 }
 
@@ -103,22 +131,17 @@ export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, I
     protected property: FlowProperty = { sourceAlias: "", sinkAlias: "" };
 
     /**
-     * Different flow implementation may require different configuration, which can
-     * be done by defining their own feature specifications.
-     * 
-     * @param features Custom features.
+     * @inheritDoc IFlowDescriptorBuilder.configure
      */
     abstract configure(features: any): IFlowDescriptorBuilder;
 
     /**
-     * Build the flow descriptor.
+     * @inheritDoc ICanBuildFlowDescriptor.build
      */
     abstract build(): FlowDescriptor;
 
     /**
-     * Set the source table of the flow.
-     * 
-     * @param alias Alias of the source table.
+     * @inheritDoc ICanSetFlowSource.source
      */
     source(alias: string): ICanSetFlowBarrier {
         this.property.sourceAlias = alias;
@@ -126,9 +149,7 @@ export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, I
     }
 
     /**
-     * Set the sink table of the flow.
-     * 
-     * @param alias Alias of the sink table.
+     * @inheritDoc ICanSetFlowSink.sink
      */
     sink(alias: string): ICanSetFlowAlias {
         this.property.sinkAlias = alias;
@@ -136,11 +157,7 @@ export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, I
     }
 
     /**
-     * Set the barrier table of the flow.
-     * 
-     * Barrier table is optional.
-     * 
-     * @param alias Alias of the barrier table.
+     * @inheritDoc ICanSetFlowBarrier.barrier
      */
     barrier(alias: string): ICanSetFlowSink {
         this.property.barrierAlias = alias;
@@ -148,8 +165,7 @@ export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, I
     }
 
     /**
-     * Set the alias of the result table.
-     * @param alias Alias of the result table.
+     * @inheritDoc ICanSetFlowAlias.as
      */
     as(alias: string): ICanBuildFlowDescriptor {
         this.alias = alias;
@@ -167,6 +183,9 @@ export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, I
 export abstract class BaseFlow extends FlowDescriptorBuilder {
     protected abstract exists(current: Value, source: Column, sink: Column, barrier: Column, result: Table): void;
 
+    /**
+     * @inheritDoc ICanBuildFlowDescriptor.build
+     */
     build(): FlowDescriptor {
         return new FlowDescriptor(this.alias, this.property,
             (source: Table, sink: Table, barrier?: Table) => this.apply(source, sink, barrier)

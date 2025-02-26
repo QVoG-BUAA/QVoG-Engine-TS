@@ -39,15 +39,35 @@ export class FromDescriptor {
 export type FromClause = (clause: IFromDescriptorBuilder) => ICanBuildFromDescriptor;
 
 export interface IFromDescriptorBuilder {
+    /**
+     * Fetch values and store them in memory.
+     * 
+     * @param predicate The predicate the values should satisfy.
+     */
     withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
+
+    /**
+     * Only store the predicate in table.
+     * 
+     * @param predicate The predicate the values should satisfy.
+     */
     withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
 }
 
 export interface ICanSetAlias {
+    /**
+     * Set the alias for the table.
+     * 
+     * @param alias A unique name for the table.
+     */
     as(alias: string): ICanBuildFromDescriptor;
 }
 
 export interface ICanBuildFromDescriptor {
+    /**
+     * Build the from descriptor.
+     * @returns The built from descriptor.
+     */
     build(): FromDescriptor;
 }
 
@@ -62,9 +82,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     private predicate?: ValuePredicate;
 
     /**
-     * Fetch values and store them in memory.
-     * 
-     * @param predicate The predicate the values should satisfy.
+     * @inheritDoc IFromDescriptorBuilder.withData
      */
     withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 0;
@@ -73,9 +91,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     }
 
     /**
-     * Only store the predicate in table.
-     * 
-     * @param predicate The predicate the values should satisfy.
+     * @inheritDoc IFromDescriptorBuilder.withPredicate
      */
     withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 1;
@@ -84,9 +100,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     }
 
     /**
-     * Set the alias for the table.
-     * 
-     * @param alias A unique name for the table.
+     * @inheritDoc ICanSetAlias.as
      */
     as(alias: string): ICanBuildFromDescriptor {
         this.alias = alias;
@@ -94,8 +108,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
     }
 
     /**
-     * Build the from descriptor.
-     * @returns The built from descriptor.
+     * @inheritDoc ICanBuildFromDescriptor.build
      */
     build(): FromDescriptor {
         switch (this.choice) {

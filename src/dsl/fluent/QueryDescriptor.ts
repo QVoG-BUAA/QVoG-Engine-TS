@@ -14,20 +14,81 @@ export interface ICanConfigure {
 }
 
 export interface ICanApplyFromClause {
+    /**
+     * Apply a pre-constructed from descriptor.
+     * 
+     * @param descriptor Pre-built from descriptor.
+     */
     from(descriptor: FromDescriptor): SimpleQuery;
+
+    /**
+     * Build a from descriptor with the clause and apply it.
+     * 
+     * @param clause From clause.
+     */
     from(clause: FromClause): SimpleQuery;
 }
 
 export interface ICanApplyWhereClause {
+    /**
+     * Apply a filter or flow action to the query.
+     * 
+     * Use {@link FilterDescriptor | `FilterDescriptor`} to filter tables, or use
+     * {@link FlowDescriptor | `FlowDescriptor`} for flow actions to find path problems.
+     * 
+     * @param param Filter/flow descriptor or clause.
+     * @param flow Only required when `param` is {@link FlowDescriptor | `FlowDescriptor`}
+     *      or {@link FlowClause | `FlowClause`}.
+     */
+
+    /**
+     * Apply a pre-constructed filter descriptor.
+     * 
+     * @param descriptor Pre-built filter descriptor.
+     */
     where(descriptor: FilterDescriptor): FilteredQuery;
+
+    /**
+     * Build a filter descriptor with the clause and apply it.
+     * 
+     * @param clause Filter clause.
+     */
     where(clause: FilterClause): FilteredQuery;
 
+    /**
+     * Apply a pre-constructed flow descriptor.
+     * 
+     * @param descriptor Pre-built flow descriptor.
+     */
     where(descriptor: FlowDescriptor): FilteredQuery;
+
+    /**
+     * Build a flow descriptor with the clause and apply it.
+     * 
+     * Different flow implementation may require different configuration, so you
+     * need to specify which flow to use by providing `flow`.
+     * 
+     * @param clause Flow clause.
+     * @param flow Flow action builder.
+     */
     where(clause: FlowClause, flow: () => IFlowDescriptorBuilder): FilteredQuery;
 }
 
 export interface ICanApplySelectClause {
-    select(columns: string[]): CompleteQuery;
+    /**
+     * Select columns from the result table.
+     * 
+     * The result column order is the same as the order of the columns in
+     * the `columns` array.
+     * 
+     * If there is only one column, you can pass a string instead of an array.
+     * 
+     * > [!WARNING]
+     * > Make sure there is only one table left.
+     * 
+     * @param columns Columns to select from the result table.
+     */
+    select(columns: string | string[]): CompleteQuery;
 }
 
 export interface InitialQuery extends ICanConfigure, ICanApplyFromClause {
@@ -40,10 +101,24 @@ export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClau
 }
 
 export interface CompleteQuery {
+    /**
+     * Output the result of the query as a string with the specified style.
+     * 
+     * See the format of {@link TablePrettifier.toString | `TablePrettifier.toString`}
+     * for available styles.
+     * 
+     * @param style The output style.
+     * @returns The result of the query in the specified style.
+     */
     toString(style: string): string;
 }
 
 export interface IQueryDescriptor {
+    /**
+     * Set the database context the query uses.
+     * 
+     * @param dbContext Database context.
+     */
     withDatabase(dbContext: DbContext): InitialQuery;
 }
 
@@ -71,9 +146,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     private dbContext?: DbContext;
 
     /**
-     * Set the database context the query uses.
-     * 
-     * @param dbContext Database context.
+     * @inheritDoc IQueryDescriptor.withDatabase
      */
     withDatabase(dbContext: DbContext): InitialQuery {
         this.dbContext = dbContext;
@@ -81,12 +154,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     /**
-     * Add a table to the query.
-     * 
-     * You can provide a pre-built {@link FromDescriptor | `FromDescriptor`} or use a
-     * {@link FromClause | `FromClause`} to build it on demand.
-     * 
-     * @param param From descriptor or clause.
+     * See {@link ICanApplyFromClause | `ICanApplyFromClause`}.
      */
     from(param: FromDescriptor | FromClause): SimpleQuery {
         if (param instanceof FromDescriptor) {
@@ -105,15 +173,9 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.fromDescriptor(clause(new FromDescriptorBuilder()).build());
     }
 
+
     /**
-     * Apply a filter or flow action to the query.
-     * 
-     * Use {@link FilterDescriptor | `FilterDescriptor`} to filter tables, or use
-     * {@link FlowDescriptor | `FlowDescriptor`} for flow actions to find path problems.
-     * 
-     * @param param Filter/flow descriptor or clause.
-     * @param flow Only required when `param` is {@link FlowDescriptor | `FlowDescriptor`}
-     *      or {@link FlowClause | `FlowClause`}.
+     * See {@link ICanApplyWhereClause | `ICanApplyWhereClause`}.
      */
     where(param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause, flow?: () => IFlowDescriptorBuilder): FilteredQuery {
         if (param instanceof FilterDescriptor) {
@@ -149,17 +211,13 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     /**
-     * Select columns from the result table.
-     * 
-     * The result column order is the same as the order of the columns in
-     * the `columns` array.
-     * 
-     * > [!WARNING]
-     * > Make sure there is only one table left.
-     * 
-     * @param columns Columns to select from the result table.
+     * @inheritDoc ICanApplySelectClause.select
      */
-    select(columns: string[]): CompleteQuery {
+    select(columns: string | string[]): CompleteQuery {
+        if (typeof columns === "string") {
+            columns = [columns];
+        }
+
         const table = this.tables.asTable();
         this.result = new Table("Query Result");
 
@@ -177,13 +235,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     /**
-     * Output the result of the query as a string with the specified style.
-     * 
-     * See the format of {@link TablePrettifier.toString | `TablePrettifier.toString`}
-     * for available styles.
-     * 
-     * @param style The output style.
-     * @returns The result of the query in the specified style.
+     * @inheritDoc CompleteQuery.toString
      */
     toString(style: string): string {
         const prettifier = new TablePrettifier();
