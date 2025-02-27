@@ -51,6 +51,10 @@ export class GraphFilter {
     /**
      * Filter the graph using the set connection and predicate.
      * 
+     * > [!WARNING]
+     * > This method has serious performance issue and should be improved
+     * > in the future.
+     * 
      * @param name Name of the filtered table.
      * @returns The filtered table.
      */
@@ -65,6 +69,8 @@ export class GraphFilter {
         const table = new Table(name);
         const column = new DataColumn(name, true);
 
+        // FIXME: Currently, all vertices will be fetched into memory then filtered.
+        // Therefore, this method is not suitable for large graphs.
         let blocked = true;
         this.connection.V().toList().then((vertices: any) => {
             vertices.forEach((vertex: Vertex) => {
