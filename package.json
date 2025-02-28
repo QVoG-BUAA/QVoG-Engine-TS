@@ -21,7 +21,7 @@
   "author": "Tony S.",
   "license": "Apache-2.0",
   "dependencies": {
-    "deasync": "^0.1.30",
+    "@kaciras/deasync": "^1.1.0",
     "gremlin": "^3.4.3",
     "tslog": "^4.9.3"
   },

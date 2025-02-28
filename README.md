@@ -5,6 +5,9 @@
 
 QVoG Engine and built-in query library.
 
+> [!NOTE]
+> Use Node.js 22 or higher, it seems to have some issues with older versions.
+
 ## Build
 
 To initialize the project, run the following command:

@@ -1,4 +1,4 @@
-import deasync from "deasync";
+import { loopWhile } from "@kaciras/deasync";
 
 import { Table } from "~/dsl/table/Table";
 import { Context } from "~/graph/Context";
@@ -84,7 +84,7 @@ export class GraphFilter {
         }).finally(() => {
             blocked = false;
         });
-        deasync.loopWhile(() => blocked);
+        loopWhile(() => blocked);
 
         table.addColumn(column);
 
