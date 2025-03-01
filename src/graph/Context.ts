@@ -121,7 +121,7 @@ export class Context {
 
         const props = {
             lineno: parseInt(properties.get("lineno") || "0"),
-            code: properties.get("code") || "",
+            code: this.formatCode(properties.get("code") || ""),
             file: properties.get("file") || "",
             json: json,
             functionDefName: properties.get("functionDefName")
@@ -146,5 +146,14 @@ export class Context {
         value.setId(node.getId());
 
         return [node, value];
+    }
+
+    /**
+     * Remove new lines and strip consecutive spaces.
+     * 
+     * FIXME: This may unintentionally strip string literals in code as well.
+     */
+    private formatCode(code: string): string {
+        return code.trim().replace(/\n/g, " ").replace(/\s+/g, " ");
     }
 }
