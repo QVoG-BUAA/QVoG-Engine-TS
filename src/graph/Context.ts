@@ -109,7 +109,15 @@ export class Context {
         if (!jsonProperty) {
             throw new Error("json property is missing");
         }
-        const json: AstJson = JSON.parse(jsonProperty);
+
+        let json: AstJson = { _identifier: "__invalid__" };
+        try {
+            json = JSON.parse(jsonProperty);
+        } catch (error) {
+            this.log.error(`Failed to parse JSON AST: ${error}`);
+            this.log.error(`Bad AST JSON: ${jsonProperty}`);
+            // continue with the invalid json
+        }
 
         const props = {
             lineno: parseInt(properties.get("lineno") || "0"),
