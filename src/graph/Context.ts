@@ -129,7 +129,9 @@ export class Context {
 
         const node = new CodeNode(vertex, props);
         const value = this.factory.buildValue(json);
-        value.setId(node.getId());
+
+        // link all values in the AST to this node
+        value.stream().forEach(v => v.setId(node.getId()));
 
         return [node, value];
     }

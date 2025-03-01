@@ -1,4 +1,4 @@
-import { GraphNode } from "~/graph/Node";
+import { CodeNode, GraphNode } from "~/graph/Node";
 import { Stream } from "~/extensions/Stream";
 import { Configuration } from "~/Configuration";
 import { InvalidType, Type } from "~/graph/Type";
@@ -21,15 +21,35 @@ export abstract class Value {
     }
 
     /**
+     * Get the node in the graph database this value is associated with.
+     * 
      * Value only represents the AST of the node in the database, use this 
-     * method to get the complete node.
+     * method to get the complete node, see {@link CodeNode | `CodeNode`} for
+     * more information.
+     * 
+     * FIXME: All values should be associated with `CodeNode`, so no type check is 
+     * performed here.
      * 
      * @returns The complete node in the graph database this value is associated with.
      */
-    getNode(): GraphNode {
-        return Configuration.getContext().getNode(this);
+    getNode(): CodeNode {
+        return Configuration.getContext().getNode(this) as CodeNode;
     }
 
+    /**
+     * Get the original line of code in the source file.
+     * 
+     * All values in one node share the same code.
+     * 
+     * @returns The original
+     */
+    getCode(): string {
+        return this.getNode().getProperty().code;
+    }
+
+    /**
+     * @internal
+     */
     setId(id: number): void {
         this.id = id;
     }
