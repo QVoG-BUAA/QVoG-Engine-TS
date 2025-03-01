@@ -10,8 +10,10 @@ import { InvalidValue, Value } from "~/graph/Value";
 export interface LanguageValueRule<TValue extends Value> {
     /**
      * Types of the AST node that this handler can build.
-     * This is the `_identifier` field of the JSON AST object.
+     * 
+     * This filed is used to match the `_identifier` field of the JSON AST object.
      * Use an array to match multiple types if they can be handled by the same rule.
+     * To provide a default rule, use "*", and place it at the end of the list.
      */
     types: string | string[];
 
@@ -34,8 +36,10 @@ export interface LanguageValueRule<TValue extends Value> {
 export interface LanguageTypeRule<TType extends Type> {
     /**
     * Types of the AST node that this handler can build.
-    * This is the `_identifier` field of the JSON AST object.
+    *
+    * This filed is used to match the `_identifier` field of the JSON AST object.
     * Use an array to match multiple types if they can be handled by the same rule.
+    * To provide a default rule, use "*", and place it at the end of the list.
     */
     types: string | string[];
 
@@ -140,8 +144,13 @@ export class ValueFactory {
 
     private matchRule(types: string | string[], identifier: string): boolean {
         if (Array.isArray(types)) {
-            return types.includes(identifier);
+            return types.includes(identifier) || types.includes("*");
         }
+
+        if (types === "*") {
+            return true;
+        }
+
         return types === identifier;
     }
 }
