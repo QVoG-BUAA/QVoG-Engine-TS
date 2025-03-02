@@ -48,7 +48,7 @@ export abstract class Column {
      * Predicate column has size of -1, so it is safe to use
      * this method to check if the column is empty.
      * 
-     * @returns true if the column is empty, false otherwise.
+     * @returns `true` if the column is empty, `false` otherwise.
      */
     isEmpty(): boolean {
         return this.size === 0;
@@ -62,7 +62,7 @@ export abstract class Column {
     /**
      * Check if the column has an index.
      * 
-     * @returns true if the column has an index, false otherwise.
+     * @returns `true` if the column has an index, `false` otherwise.
      */
     hasIndex(): boolean {
         return false;

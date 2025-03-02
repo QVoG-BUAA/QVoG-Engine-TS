@@ -59,7 +59,7 @@ export class Stream<T> {
      * Check if at least one element satisfies the predicate.
      * 
      * @param predicate Predicate.
-     * @returns True if at least one element satisfies the predicate, false otherwise.
+     * @returns `true` if at least one element satisfies the predicate, `false` otherwise.
      */
     any(predicate: (value: T) => boolean): boolean {
         for (const value of this.stream) {
@@ -74,7 +74,7 @@ export class Stream<T> {
      * Check if none of the elements satisfy the predicate.
      * 
      * @param predicate Predicate.
-     * @returns True if none of the elements satisfy the predicate, false otherwise.
+     * @returns `true` if none of the elements satisfy the predicate, `false` otherwise.
      */
     none(predicate: (value: T) => boolean): boolean {
         for (const value of this.stream) {

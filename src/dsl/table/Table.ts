@@ -104,7 +104,7 @@ export class Table {
      * Check if the table has a column with the given name.
      * 
      * @param name The name of the column to check.
-     * @returns true if the table has a column with the given name, false otherwise.
+     * @returns `true` if the table has a column with the given name, `false` otherwise.
      */
     hasColumn(name: string): boolean {
         return this.columns.some(column => column.getName() === name);
