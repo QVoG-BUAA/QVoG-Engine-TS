@@ -1,8 +1,8 @@
-import { CodeNode, GraphNode } from "~/graph/Node";
-import { Stream } from "~/extensions/Stream";
-import { Configuration } from "~/Configuration";
-import { InvalidType, Type } from "~/graph/Type";
-import { AstJson } from "./Defines";
+import { CodeNode, GraphNode } from '~/graph/Node';
+import { Stream } from '~/extensions/Stream';
+import { Configuration } from '~/Configuration';
+import { InvalidType, Type } from '~/graph/Type';
+import { AstJson } from './Defines';
 
 /**
  * Base class for all values.
@@ -59,7 +59,7 @@ export abstract class Value {
     */
     getId(): number {
         if (!this.id) {
-            throw new Error("Value id not available");
+            throw new Error('Value id not available');
         }
         return this.id;
     }
@@ -133,7 +133,7 @@ export class InvalidValue extends Value {
      * @returns An instance of InvalidValue.
      */
     static get(spec: string | AstJson): InvalidValue {
-        if (typeof spec === "string") {
+        if (typeof spec === 'string') {
             return new InvalidValue(spec);
         } else {
             return new InvalidValue(spec._identifier);

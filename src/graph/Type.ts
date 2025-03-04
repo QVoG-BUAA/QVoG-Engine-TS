@@ -1,4 +1,4 @@
-import { AstJson } from "./Defines";
+import { AstJson } from './Defines';
 
 /**
  * Base class for all types.
@@ -51,7 +51,7 @@ export abstract class Type {
  * @category Graph
  */
 export class InvalidType extends Type {
-    constructor(identifier: string = "invalid", name: string = "invalid") {
+    constructor(identifier: string = 'invalid', name: string = 'invalid') {
         super(identifier, name, false);
     }
 
@@ -62,7 +62,7 @@ export class InvalidType extends Type {
      * @returns An instance of InvalidType.
      */
     static get(spec: string | AstJson): InvalidType {
-        if (typeof spec === "string") {
+        if (typeof spec === 'string') {
             return new InvalidType(spec);
         } else {
             return new InvalidType(spec._identifier);

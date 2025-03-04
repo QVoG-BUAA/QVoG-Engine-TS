@@ -1,6 +1,6 @@
-import { Value } from "~/graph/Value";
-import { FlowPath, Row } from "~/dsl/Defines";
-import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
+import { Value } from '~/graph/Value';
+import { FlowPath, Row } from '~/dsl/Defines';
+import { CodeNode, FileNode, GraphNode } from '~/graph/Node';
 
 /**
  * A predicate that tests a {@link Value | `Value`}.

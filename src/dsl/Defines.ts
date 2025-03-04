@@ -1,8 +1,8 @@
-import { Value } from "~/graph/Value";
-import { Edge } from "~/db/gremlin/Defines";
-import { Configuration } from "~/Configuration";
-import { CodeNode, FileNode } from "~/graph/Node";
-import { ArrayIterator } from "~/extensions/Iterator";
+import { Value } from '~/graph/Value';
+import { Edge } from '~/db/gremlin/Defines';
+import { Configuration } from '~/Configuration';
+import { CodeNode, FileNode } from '~/graph/Node';
+import { ArrayIterator } from '~/extensions/Iterator';
 
 /**
  * @category DSL Data
@@ -50,13 +50,13 @@ export class FlowStream {
      * 
      * @param step Step to add.
      */
-    add(step: OptionalFlowStep) {
+    add(step: OptionalFlowStep): void {
         this.stream.push(step);
     }
 
     toString(): string {
         const context = Configuration.getContext();
-        let result = "";
+        let result = '';
         let first = true;
         for (const [value, _] of this) {
             const node = context.getNode(value);
@@ -66,13 +66,13 @@ export class FlowStream {
             } else if (node instanceof FileNode) {
                 text = node.getProperty().path;
             } else {
-                throw new Error("Unexpected node type");
+                throw new Error('Unexpected node type');
             }
             if (first) {
                 result += text;
                 first = false;
             } else {
-                result += " -> " + text;
+                result += ' -> ' + text;
             }
         }
         return result;
@@ -120,7 +120,7 @@ export class FlowPath {
      * Add a step to the path.
      * @param step Step to add.
      */
-    add(step: Value) {
+    add(step: Value): void {
         this.path.push(step);
     }
 
@@ -155,7 +155,7 @@ export class FlowPath {
      */
     toString(): string {
         const context = Configuration.getContext();
-        let result = "";
+        let result = '';
         let first = true;
         for (const value of this) {
             const node = context.getNode(value);
@@ -165,13 +165,13 @@ export class FlowPath {
             } else if (node instanceof FileNode) {
                 text = node.getProperty().path;
             } else {
-                throw new Error("Unexpected node type");
+                throw new Error('Unexpected node type');
             }
             if (first) {
                 result += text;
                 first = false;
             } else {
-                result += " -> " + text;
+                result += ' -> ' + text;
             }
         }
         return result;

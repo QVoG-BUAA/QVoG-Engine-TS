@@ -1,5 +1,5 @@
-import { Vertex } from "~/db/gremlin/Defines";
-import { CodeProperty, FileProperty } from "~/graph/Defines";
+import { Vertex } from '~/db/gremlin/Defines';
+import { CodeProperty, FileProperty } from '~/graph/Defines';
 
 /**
  * Base class for all graph nodes.

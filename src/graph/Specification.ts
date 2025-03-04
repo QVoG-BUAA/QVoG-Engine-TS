@@ -1,6 +1,6 @@
-import { AstJson } from "~/graph/Defines";
-import { InvalidType, Type } from "~/graph/Type";
-import { InvalidValue, Value } from "~/graph/Value";
+import { AstJson } from '~/graph/Defines';
+import { InvalidType, Type } from '~/graph/Type';
+import { InvalidValue, Value } from '~/graph/Value';
 
 /**
  * Rule to build a value from the JSON AST.
@@ -80,14 +80,14 @@ export class ValueFactory {
     private specification: LanguageSpecification;
 
     private defaultValueRule: LanguageValueRule<Value> = {
-        types: "",
+        types: '',
         build(json: AstJson, factory: ValueFactory): Value {
             return InvalidValue.get(json);
         }
     };
 
     private defaultTypeRule: LanguageTypeRule<Type> = {
-        types: "",
+        types: '',
         build(json: AstJson, factory: ValueFactory): Type {
             return InvalidType.get(json);
         }
@@ -144,10 +144,10 @@ export class ValueFactory {
 
     private matchRule(types: string | string[], identifier: string): boolean {
         if (Array.isArray(types)) {
-            return types.includes(identifier) || types.includes("*");
+            return types.includes(identifier) || types.includes('*');
         }
 
-        if (types === "*") {
+        if (types === '*') {
             return true;
         }
 

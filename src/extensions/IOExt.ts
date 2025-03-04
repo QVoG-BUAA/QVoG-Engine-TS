@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 
 /**
  * Print stream interface.
@@ -22,7 +22,7 @@ export class ConsolePrintStream implements PrintStream {
     }
 
     println(text: string): void {
-        this.print(text + "\n");
+        this.print(text + '\n');
     }
 
     close(): void {
@@ -40,7 +40,7 @@ export class FilePrintStream implements PrintStream {
     private append: boolean;
 
     constructor(file: string, append: boolean) {
-        this.fd = fs.openSync(file, append ? "a" : "w");
+        this.fd = fs.openSync(file, append ? 'a' : 'w');
         this.append = append;
     }
 
@@ -49,7 +49,7 @@ export class FilePrintStream implements PrintStream {
     }
 
     println(text: string): void {
-        this.print(text + "\n");
+        this.print(text + '\n');
     }
 
     close(): void {
@@ -64,6 +64,6 @@ export class FilePrintStream implements PrintStream {
  */
 export class FileUtils {
     static readTextFile(file: string): string {
-        return fs.readFileSync(file, "utf8");
+        return fs.readFileSync(file, 'utf8');
     }
 }

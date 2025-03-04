@@ -1,7 +1,7 @@
-import { Value } from "~/graph/Value";
-import { Table } from "~/dsl/table/Table";
-import { ValuePredicate } from "~/dsl/Predicates";
-import { AnyColumn, Column, DataColumn, PredicateColumn } from "~/dsl/table/Column";
+import { Value } from '~/graph/Value';
+import { Table } from '~/dsl/table/Table';
+import { ValuePredicate } from '~/dsl/Predicates';
+import { AnyColumn, Column, DataColumn, PredicateColumn } from '~/dsl/table/Column';
 
 /**
  * @category DSL API
@@ -126,9 +126,16 @@ export interface ICanBuildFlowDescriptor {
  * 
  * @category DSL API
  */
-export abstract class FlowDescriptorBuilder implements IFlowDescriptorBuilder, ICanSetFlowSource, ICanSetFlowSink, ICanSetFlowBarrier, ICanSetFlowAlias, ICanBuildFlowDescriptor {
-    protected alias: string = "";
-    protected property: FlowProperty = { sourceAlias: "", sinkAlias: "" };
+export abstract class FlowDescriptorBuilder implements
+    IFlowDescriptorBuilder,
+    ICanSetFlowSource,
+    ICanSetFlowSink,
+    ICanSetFlowBarrier,
+    ICanSetFlowAlias,
+    ICanBuildFlowDescriptor {
+
+    protected alias: string = '';
+    protected property: FlowProperty = { sourceAlias: '', sinkAlias: '' };
 
     abstract configure(features: any): IFlowDescriptorBuilder;
 
@@ -174,7 +181,7 @@ export abstract class BaseFlow extends FlowDescriptorBuilder {
     private apply(source: Table, sink: Table, barrier?: Table): Table {
         const sourceColumn = source.asColumn();
         const sinkColumn = sink.asColumn();
-        const barrierColumn = barrier ? barrier.asColumn() : new PredicateColumn("", ValuePredicate.none());
+        const barrierColumn = barrier ? barrier.asColumn() : new PredicateColumn('', ValuePredicate.none());
 
         const result = new Table(this.alias);
         result.addColumn(new DataColumn(this.property.sourceAlias, true));

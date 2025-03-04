@@ -1,5 +1,5 @@
-import { Table } from "~/dsl/table/Table";
-import { FlowPredicate, RowPredicate, ValuePredicate } from "~/dsl/Predicates";
+import { Table } from '~/dsl/table/Table';
+import { FlowPredicate, RowPredicate, ValuePredicate } from '~/dsl/Predicates';
 
 /**
  * Defines the behavior of a filter action which is used to filter data in a table.
@@ -91,7 +91,7 @@ export interface ICanBuildFilterDescriptor {
  * @category DSL API
  */
 export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSetFilterPredicate, ICanBuildFilterDescriptor {
-    private alias: string = "";
+    private alias: string = '';
     private apply?: (table: Table) => Table;
 
     /**
@@ -107,13 +107,13 @@ export class FilterDescriptorBuilder implements IFilterDescriptorBuilder, ICanSe
      */
     where(predicate: ValuePredicate | RowPredicate | FlowPredicate): ICanBuildFilterDescriptor {
         if (predicate instanceof ValuePredicate) {
-            this.apply = table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
+            this.apply = (table: Table): Table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
         } else if (predicate instanceof RowPredicate) {
-            this.apply = table => applyImpl(table, predicate);
+            this.apply = (table: Table): Table => applyImpl(table, predicate);
         } else if (predicate instanceof FlowPredicate) {
-            this.apply = table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
+            this.apply = (table: Table): Table => applyImpl(table, new RowPredicate(row => predicate.test(row.get(this.alias!))));
         } else {
-            throw new Error("Invalid predicate type");
+            throw new Error('Invalid predicate type');
         }
         return this;
     }

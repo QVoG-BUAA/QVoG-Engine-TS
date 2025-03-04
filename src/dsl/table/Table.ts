@@ -1,5 +1,5 @@
-import { Column } from "~/dsl/table/Column";
-import { Row, RowWithoutHeader } from "~/dsl/Defines";
+import { Column } from '~/dsl/table/Column';
+import { Row, RowWithoutHeader } from '~/dsl/Defines';
 
 /**
  * A table is a collection of columns.
@@ -176,7 +176,7 @@ export class Table {
     iterator(): Iterator<Row> {
         let index = 0;
         return {
-            next: () => {
+            next: (): IteratorResult<Row, any> => {
                 if (index < this.size) {
                     return { value: this.getRow(index++), done: false };
                 }
@@ -193,7 +193,7 @@ export class Table {
     iteratorWithoutHeader(): Iterator<RowWithoutHeader> {
         let index = 0;
         return {
-            next: () => {
+            next: (): IteratorResult<RowWithoutHeader, any> => {
                 if (index < this.size) {
                     return { value: this.getRowWithoutHeader(index++), done: false };
                 }
@@ -226,7 +226,7 @@ export class Table {
      */
     asColumn(): Column {
         if (this.columns.length !== 1) {
-            throw new Error("Table must contain exactly one column");
+            throw new Error('Table must contain exactly one column');
         }
         return this.columns[0];
     }
@@ -278,7 +278,7 @@ export class TableSet {
 
     asTable(): Table {
         if (this.tables.size !== 1) {
-            throw new Error("Table set must contain exactly one table");
+            throw new Error('Table set must contain exactly one table');
         }
         return this.tables.values().next().value!;
     }

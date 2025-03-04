@@ -1,10 +1,10 @@
-import { DbContext } from "~/db/DbContext";
-import { Queryable } from "~/engine/Defines";
-import { Configuration } from "~/Configuration";
-import { TablePrettifier } from "~/extensions/TableExt";
-import { Query, QueryDescriptor } from "~/dsl/fluent/QueryDescriptor";
-import { ConsolePrintStream, FileUtils, PrintStream } from "~/extensions/IOExt";
-import { DefaultResultFormatter, IResultFormatter } from "~/extensions/ResultFormatter";
+import { DbContext } from '~/db/DbContext';
+import { Queryable } from '~/engine/Defines';
+import { Configuration } from '~/Configuration';
+import { TablePrettifier } from '~/extensions/TableExt';
+import { Query, QueryDescriptor } from '~/dsl/fluent/QueryDescriptor';
+import { ConsolePrintStream, FileUtils, PrintStream } from '~/extensions/IOExt';
+import { DefaultResultFormatter, IResultFormatter } from '~/extensions/ResultFormatter';
 
 /**
  * The execution engine of QVoG that runs queries and outputs results.
@@ -14,10 +14,10 @@ import { DefaultResultFormatter, IResultFormatter } from "~/extensions/ResultFor
 export class QVoGEngine {
     private static instance: QVoGEngine;
 
-    private log = Configuration.getLogger("QVoGEngine");
+    private log = Configuration.getLogger('QVoGEngine');
 
     // Query output style.
-    private style: string = "markdown";
+    private style: string = 'markdown';
     // Engine execution result formatter.
     private formatter: IResultFormatter = new DefaultResultFormatter();
 
@@ -25,13 +25,13 @@ export class QVoGEngine {
 
     private totalExecutionTime: number = 0;
 
-    private constructor(filename: string = "config.json") {
-        this.log.info("Initializing QVoG Engine");
+    private constructor(filename: string = 'config.json') {
+        this.log.info('Initializing QVoG Engine');
 
         const config = JSON.parse(FileUtils.readTextFile(filename));
         Configuration.setDbContext(new DbContext(config));
 
-        this.log.info("QVoG Engine initialized");
+        this.log.info('QVoG Engine initialized');
     }
 
     /**
@@ -43,7 +43,7 @@ export class QVoGEngine {
      * @param filename Configuration file path.
      * @returns The engine instance.
      */
-    static getInstance(filename: string = "config.json"): QVoGEngine {
+    static getInstance(filename: string = 'config.json'): QVoGEngine {
         if (!QVoGEngine.instance) {
             QVoGEngine.instance = new QVoGEngine(filename);
         }
@@ -148,7 +148,7 @@ export class QVoGEngine {
         this.output.println(`Total execution time: ${this.totalExecutionTime}ms`);
         this.output.close();
         Configuration.getDbContext().close();
-        this.log.info("QVoG Engine closed");
+        this.log.info('QVoG Engine closed');
     }
 
     private executeImpl(name: string, query: Query): void {

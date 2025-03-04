@@ -1,8 +1,8 @@
-import { Table } from "~/dsl/table/Table";
-import { DbContext } from "~/db/DbContext";
-import { Configuration } from "~/Configuration";
-import { PredicateColumn } from "~/dsl/table/Column";
-import { ValuePredicate, ValuePredicateFn } from "~/dsl/Predicates";
+import { Table } from '~/dsl/table/Table';
+import { DbContext } from '~/db/DbContext';
+import { Configuration } from '~/Configuration';
+import { PredicateColumn } from '~/dsl/table/Column';
+import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
 
 /**
  * Defines the behavior of a from action which is used to fetch data from a table.
@@ -78,7 +78,7 @@ export interface ICanBuildFromDescriptor {
  */
 export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAlias, ICanBuildFromDescriptor {
     private choice: number = 0;
-    private alias: string = "";
+    private alias: string = '';
     private predicate?: ValuePredicate;
 
     /**
@@ -117,14 +117,14 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
             case 1:
                 return PredicateFromDescriptorBuilder.build(this.alias!, this.predicate!);
             default:
-                throw new Error("Invalid choice");
+                throw new Error('Invalid choice');
         }
     }
 }
 
 class DataFromDescriptorBuilder {
     static build(alias: string, predicate: ValuePredicate): FromDescriptor {
-        const apply = (dbContext: DbContext) => {
+        const apply = (dbContext: DbContext): Table => {
             return Configuration.getGraphFilter()
                 .withConnection(dbContext.getGremlinConnection())
                 .withPredicate(predicate)
@@ -135,8 +135,8 @@ class DataFromDescriptorBuilder {
 }
 
 class PredicateFromDescriptorBuilder {
-    static build(alias: string, predicate: ValuePredicate) {
-        const apply = (dbContext: DbContext) => {
+    static build(alias: string, predicate: ValuePredicate): FromDescriptor {
+        const apply = (dbContext: DbContext): Table => {
             const table = new Table(alias);
             table.addColumn(new PredicateColumn(alias, predicate));
             return table;

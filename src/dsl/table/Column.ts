@@ -1,6 +1,6 @@
-import { Value } from "~/graph/Value";
-import { ValuePredicate } from "~/dsl/Predicates";
-import { ArrayIterator } from "~/extensions/Iterator";
+import { Value } from '~/graph/Value';
+import { ValuePredicate } from '~/dsl/Predicates';
+import { ArrayIterator } from '~/extensions/Iterator';
 
 type Index = Map<number, number>;
 
@@ -100,7 +100,7 @@ export abstract class Column {
      * @throws Error if the column does not support index.
      */
     getValueWithKey(key: number): any | undefined {
-        throw new Error("Method not implemented");
+        throw new Error('Method not implemented');
     }
 
     /**
@@ -117,7 +117,7 @@ export abstract class Column {
      * @throws Error if the column does not support index.
      */
     containsKey(key: number): boolean {
-        throw new Error("Method not implemented");
+        throw new Error('Method not implemented');
     }
 
     /**
@@ -199,7 +199,7 @@ export class DataColumn extends Column {
      */
     getValueWithKey(index: number): Value | undefined {
         if (!this.index) {
-            throw new Error("Index not available");
+            throw new Error('Index not available');
         }
         const i = this.index.get(index);
         if (i !== undefined) {
@@ -223,7 +223,7 @@ export class DataColumn extends Column {
      */
     containsKey(key: number): boolean {
         if (!this.index) {
-            throw new Error("Index not available");
+            throw new Error('Index not available');
         }
         return this.index.has(key);
     }
@@ -277,7 +277,7 @@ export class PredicateColumn extends Column {
      * @throws Error Method not supported.
      */
     addValue(value: any): void {
-        throw new Error("Method not supported");
+        throw new Error('Method not supported');
     }
 
     /**
@@ -285,8 +285,8 @@ export class PredicateColumn extends Column {
      * 
      * @throws Error Method not supported.
      */
-    getValue(index: number) {
-        throw new Error("Method not supported");
+    getValue(index: number): any {
+        throw new Error('Method not supported');
     }
 
     /**
@@ -309,7 +309,7 @@ export class PredicateColumn extends Column {
      * @throws Error Method not supported.
      */
     iterator(): Iterator<any> {
-        throw new Error("Method not supported");
+        throw new Error('Method not supported');
     }
 }
 
@@ -340,7 +340,7 @@ export class AnyColumn extends Column {
     /**
      * @inheritdoc
      */
-    getValue(index: number) {
+    getValue(index: number): any {
         return this.values[index];
     }
 

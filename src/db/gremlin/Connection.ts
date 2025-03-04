@@ -1,4 +1,4 @@
-import { driver, process, structure } from "gremlin";
+import { driver, process, structure } from 'gremlin';
 
 /**
  * Connection to gremlin server.

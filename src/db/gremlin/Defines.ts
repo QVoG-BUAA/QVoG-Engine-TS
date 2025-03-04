@@ -1,4 +1,4 @@
-import { process } from "gremlin";
+import { process } from 'gremlin';
 
 export { process };
 

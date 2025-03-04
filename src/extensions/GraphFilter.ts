@@ -1,12 +1,12 @@
-import { loopWhile } from "@kaciras/deasync";
+import { loopWhile } from '@kaciras/deasync';
 
-import { Table } from "~/dsl/table/Table";
-import { Context } from "~/graph/Context";
-import { Vertex } from "~/db/gremlin/Defines";
-import { Configuration } from "~/Configuration";
-import { DataColumn } from "~/dsl/table/Column";
-import { ValuePredicate } from "~/dsl/Predicates";
-import { GremlinConnection } from "~/db/gremlin/Connection";
+import { Table } from '~/dsl/table/Table';
+import { Context } from '~/graph/Context';
+import { Vertex } from '~/db/gremlin/Defines';
+import { Configuration } from '~/Configuration';
+import { DataColumn } from '~/dsl/table/Column';
+import { ValuePredicate } from '~/dsl/Predicates';
+import { GremlinConnection } from '~/db/gremlin/Connection';
 
 /**
  * Filter the graph database to get table of {@link Value | `Value`} that
@@ -15,7 +15,7 @@ import { GremlinConnection } from "~/db/gremlin/Connection";
  * @category Extension
  */
 export class GraphFilter {
-    private log = Configuration.getLogger("GraphFilter");
+    private log = Configuration.getLogger('GraphFilter');
 
     private context: Context;
     private connection?: GremlinConnection;
@@ -60,10 +60,10 @@ export class GraphFilter {
      */
     filter(name: string): Table {
         if (!this.connection) {
-            throw new Error("Connection is not set");
+            throw new Error('Connection is not set');
         }
         if (!this.predicate) {
-            throw new Error("Predicate is not set");
+            throw new Error('Predicate is not set');
         }
 
         const table = new Table(name);
@@ -80,7 +80,7 @@ export class GraphFilter {
                 }
             });
         }).catch((e: any) => {
-            this.log.error("Failed to get vertices", e);
+            this.log.error('Failed to get vertices', e);
         }).finally(() => {
             blocked = false;
         });

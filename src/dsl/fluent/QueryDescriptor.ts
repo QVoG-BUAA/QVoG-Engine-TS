@@ -1,13 +1,13 @@
-import { Value } from "~/graph";
-import { DbContext } from "~/db/DbContext";
-import { AnyColumn } from "~/dsl/table/Column";
-import { Configuration } from "~/Configuration";
-import { GraphExt } from "~/extensions/GraphExt";
-import { Table, TableSet } from "~/dsl/table/Table";
-import { TablePrettifier } from "~/extensions/TableExt";
-import { FromClause, FromDescriptor, FromDescriptorBuilder } from "~/dsl/fluent/FromDescriptor";
-import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from "~/dsl/fluent/FlowDescriptor";
-import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from "~/dsl/fluent/FilterDescriptor";
+import { Value } from '~/graph';
+import { DbContext } from '~/db/DbContext';
+import { AnyColumn } from '~/dsl/table/Column';
+import { Configuration } from '~/Configuration';
+import { GraphExt } from '~/extensions/GraphExt';
+import { Table, TableSet } from '~/dsl/table/Table';
+import { TablePrettifier } from '~/extensions/TableExt';
+import { FromClause, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
+import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent/FlowDescriptor';
+import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
 
 export interface ICanConfigure {
     // TODO: Add configuration methods
@@ -214,12 +214,12 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
      * @inheritDoc ICanApplySelectClause.select
      */
     select(columns: string | string[]): CompleteQuery {
-        if (typeof columns === "string") {
+        if (typeof columns === 'string') {
             columns = [columns];
         }
 
         const table = this.tables.asTable();
-        this.result = new Table("Query Result");
+        this.result = new Table('Query Result');
 
         let i = 0;
         for (const name of columns) {
@@ -258,7 +258,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     private formatRow(row: any[]): string[] {
         return row.map(value => {
             if (value == null || value === undefined) {
-                return "null";
+                return 'null';
             }
             if (value instanceof Value) {
                 return GraphExt.format(value);

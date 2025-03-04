@@ -1,4 +1,4 @@
-import { ArrayIterableIterator } from "~/extensions/Iterator";
+import { ArrayIterableIterator } from '~/extensions/Iterator';
 
 /**
  * Enable stream-like API in TypeScript.

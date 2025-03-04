@@ -1,17 +1,17 @@
-import { ILogObj, Logger } from "tslog";
+import { ILogObj, Logger } from 'tslog';
 
-import { Context } from "~/graph/Context";
-import { DbContext } from "~/db/DbContext";
-import { GraphFilter } from "~/extensions/GraphFilter";
-import { LanguageSpecification, ValueFactory } from "~/graph/Specification";
+import { Context } from '~/graph/Context';
+import { DbContext } from '~/db/DbContext';
+import { GraphFilter } from '~/extensions/GraphFilter';
+import { LanguageSpecification, ValueFactory } from '~/graph/Specification';
 
 const LOG_LEVELS: Map<string, number> = new Map<string, number>([
-    ["trace", 0],
-    ["debug", 1],
-    ["info", 2],
-    ["warn", 3],
-    ["error", 4],
-    ["fatal", 5],
+    ['trace', 0],
+    ['debug', 1],
+    ['info', 2],
+    ['warn', 3],
+    ['error', 4],
+    ['fatal', 5],
 ]);
 
 /**
@@ -24,7 +24,7 @@ export class Configuration {
     // Logging
     // ---------------------------------------------------------------
 
-    private static defaultLogLevel: string = "info";
+    private static defaultLogLevel: string = 'info';
     private static registeredLogs: Map<string, string> = new Map<string, string>();
     private static loggers: Map<string, Logger<ILogObj>> = new Map<string, Logger<ILogObj>>();
 
@@ -99,7 +99,7 @@ export class Configuration {
      */
     public static getSpecification(): LanguageSpecification {
         if (!Configuration.specification) {
-            throw new Error("Specification is not set");
+            throw new Error('Specification is not set');
         }
         return Configuration.specification;
     }
@@ -138,7 +138,7 @@ export class Configuration {
      */
     public static getDbContext(): DbContext {
         if (!Configuration.dbContext) {
-            throw new Error("Database context is not set");
+            throw new Error('Database context is not set');
         }
         return Configuration.dbContext;
     }

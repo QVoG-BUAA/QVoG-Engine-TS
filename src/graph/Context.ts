@@ -1,9 +1,9 @@
-import { AstJson } from "~/graph/Defines";
-import { Configuration } from "~/Configuration";
-import { InvalidValue, Value } from "~/graph/Value";
-import { ValueFactory } from "~/graph/Specification";
-import { CodeNode, FileNode, GraphNode } from "~/graph/Node";
-import { Vertex, VertexProperty } from "~/db/gremlin/Defines";
+import { AstJson } from '~/graph/Defines';
+import { Configuration } from '~/Configuration';
+import { InvalidValue, Value } from '~/graph/Value';
+import { ValueFactory } from '~/graph/Specification';
+import { CodeNode, FileNode, GraphNode } from '~/graph/Node';
+import { Vertex, VertexProperty } from '~/db/gremlin/Defines';
 
 type NodeRegistration = [GraphNode, Value];
 type NodeRegistry = Map<number, NodeRegistration>;
@@ -17,7 +17,7 @@ type NodeRegistry = Map<number, NodeRegistration>;
  * @category Graph
  */
 export class Context {
-    private log = Configuration.getLogger("Context");
+    private log = Configuration.getLogger('Context');
 
     private factory: ValueFactory;
     private registry: NodeRegistry = new Map<number, NodeRegistration>();
@@ -58,7 +58,7 @@ export class Context {
     private getRegistration(key: Vertex | GraphNode | Value | number): NodeRegistration {
         let registration = this.tryGetRegistration(key);
         if (!registration) {
-            if (typeof key === "number") {
+            if (typeof key === 'number') {
                 throw new Error(`Node with id ${key} is not available`);
             } else if (key instanceof GraphNode) {
                 throw new Error(`Node with id ${key.getId()} is not available`);
@@ -71,7 +71,7 @@ export class Context {
     }
 
     private tryGetRegistration(key: Vertex | GraphNode | Value | number): NodeRegistration | undefined {
-        if (typeof key === "number") {
+        if (typeof key === 'number') {
             return this.registry.get(key);
         } else if (key instanceof GraphNode) {
             return this.registry.get(key.getId());
@@ -90,9 +90,9 @@ export class Context {
         }
 
         let registration: NodeRegistration;
-        if (vertex.label === "code") {
+        if (vertex.label === 'code') {
             registration = this.registerCodeNode(vertex, properties);
-        } else if (vertex.label === "file") {
+        } else if (vertex.label === 'file') {
             registration = this.registerFileNode(vertex, properties);
         } else {
             throw new Error(`Unsupported vertex label "${vertex.label}"`);
@@ -105,12 +105,12 @@ export class Context {
     }
 
     private registerCodeNode(vertex: Vertex, properties: Map<string, any>): NodeRegistration {
-        const jsonProperty = properties.get("json");
+        const jsonProperty = properties.get('json');
         if (!jsonProperty) {
-            throw new Error("json property is missing");
+            throw new Error('json property is missing');
         }
 
-        let json: AstJson = { _identifier: "__invalid__" };
+        let json: AstJson = { _identifier: '__invalid__' };
         try {
             json = JSON.parse(jsonProperty);
         } catch (error) {
@@ -120,11 +120,11 @@ export class Context {
         }
 
         const props = {
-            lineno: parseInt(properties.get("lineno") || "0"),
-            code: this.formatCode(properties.get("code") || ""),
-            file: properties.get("file") || "",
+            lineno: parseInt(properties.get('lineno') || '0'),
+            code: this.formatCode(properties.get('code') || ''),
+            file: properties.get('file') || '',
             json: json,
-            functionDefName: properties.get("functionDefName")
+            functionDefName: properties.get('functionDefName')
         };
 
         const node = new CodeNode(vertex, props);
@@ -138,11 +138,11 @@ export class Context {
 
     private registerFileNode(vertex: Vertex, properties: Map<string, any>): NodeRegistration {
         const props = {
-            path: properties.get("file")
+            path: properties.get('file')
         };
 
         const node = new FileNode(vertex, props);
-        const value = new InvalidValue("file");
+        const value = new InvalidValue('file');
         value.setId(node.getId());
 
         return [node, value];
@@ -154,6 +154,6 @@ export class Context {
      * FIXME: This may unintentionally strip string literals in code as well.
      */
     private formatCode(code: string): string {
-        return code.trim().replace(/\n/g, " ").replace(/\s+/g, " ");
+        return code.trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
     }
 }

@@ -1,4 +1,4 @@
-import { QueryResult } from "~/engine/Defines";
+import { QueryResult } from '~/engine/Defines';
 
 /**
  * Interface for result formatters. It wraps the result of a query execution by

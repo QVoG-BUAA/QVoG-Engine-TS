@@ -23,7 +23,7 @@ export class TablePrettifier {
      */
     addRow(row: Array<string>): void {
         if (row.length !== this.headers.length) {
-            throw new Error("Row size must match header size");
+            throw new Error('Row size must match header size');
         }
         this.rows.push(row);
     }
@@ -42,11 +42,11 @@ export class TablePrettifier {
      */
     toString(format: string): string {
         switch (format) {
-            case "markdown":
+            case 'markdown':
                 return this.toMarkdown();
-            case "json":
+            case 'json':
                 return this.toJson(false);
-            case "json-compact":
+            case 'json-compact':
                 return this.toJson(true);
             default:
                 throw new Error(`Invalid format: ${format}`);
@@ -54,28 +54,28 @@ export class TablePrettifier {
     }
 
     private toMarkdown(): string {
-        let result = "\n|";
+        let result = '\n|';
         for (const header of this.headers) {
             result += ` ${header} |`;
         }
-        result += "\n|";
+        result += '\n|';
         for (const header of this.headers) {
-            result += " --- |";
+            result += ' --- |';
         }
-        result += "\n";
+        result += '\n';
         for (const row of this.rows) {
-            result += "|";
+            result += '|';
             for (const cell of row) {
                 result += ` ${cell} |`;
             }
-            result += "\n";
+            result += '\n';
         }
 
         return result;
     }
 
     private toJson(compact: boolean): string {
-        const json = { "headers": this.headers, "rows": this.rows };
+        const json = { 'headers': this.headers, 'rows': this.rows };
         return compact ? JSON.stringify(json) : JSON.stringify(json, null, 4);
     }
 }

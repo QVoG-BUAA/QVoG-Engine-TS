@@ -1,4 +1,4 @@
-import { Query } from "~/dsl/fluent/QueryDescriptor";
+import { Query } from '~/dsl/fluent/QueryDescriptor';
 
 /**
  * Result of a query execution.

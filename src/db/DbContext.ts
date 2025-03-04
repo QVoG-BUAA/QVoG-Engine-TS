@@ -1,5 +1,5 @@
-import { Configuration } from "~/Configuration";
-import { GremlinConnection } from "~/db/gremlin/Connection";
+import { Configuration } from '~/Configuration';
+import { GremlinConnection } from '~/db/gremlin/Connection';
 
 /**
  * Gremlin server connection options.
@@ -26,14 +26,14 @@ export interface DatabaseOptions {
  * @category Database
  */
 export class DbContext {
-    private log = Configuration.getLogger("DbContext");
+    private log = Configuration.getLogger('DbContext');
     private gremlin: GremlinConnection;
 
     constructor(options: DatabaseOptions) {
-        this.log.info("Creating DbContext");
-        this.log.debug("Connecting to Gremlin");
+        this.log.info('Creating DbContext');
+        this.log.debug('Connecting to Gremlin');
         this.gremlin = new GremlinConnection(`ws://${options.gremlin.host}:${options.gremlin.port}/gremlin`);
-        this.log.trace("DbContext created");
+        this.log.trace('DbContext created');
     }
 
     /**
@@ -49,8 +49,8 @@ export class DbContext {
      * Close the DbContext.
      */
     close(): void {
-        this.log.info("Closing DbContext");
+        this.log.info('Closing DbContext');
         this.gremlin.close();
-        this.log.trace("DbContext closed");
+        this.log.trace('DbContext closed');
     }
 }
