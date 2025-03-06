@@ -1,7 +1,7 @@
 {
   "name": "qvog-engine",
-  "version": "0.1.1",
-  "description": "QVoG Engine",
+  "version": "0.1.2",
+  "description": "QVoG engine",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

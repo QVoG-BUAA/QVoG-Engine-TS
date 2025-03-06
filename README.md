@@ -1,12 +1,9 @@
 # QVoG Engine
 
+QVoG Query Engine is the execution engine of the top-level graph query language for vulnerability.
+
 > [!WARNING]
-> THIS PROJECT IS A WORK IN PROGRESS
-
-QVoG Engine and built-in query library.
-
-> [!NOTE]
-> Use Node.js 22 or higher, it seems to have some issues with older versions.
+> Node.js 22 or higher required.
 
 ## Build
 
@@ -44,7 +41,7 @@ npm install qvog-engine
 
 ### Local Package
 
-If you want to use the latest version of the library, you can build and link it locally. The package will be automatically updated when you build the project.
+If you want to build and use the latest version of the library, you can link it locally.
 
 ```bash
 npm link
