@@ -84,4 +84,15 @@ export class Stream<T> {
         }
         return true;
     }
+
+    /**
+     * Return this stream as an iterable iterator.
+     * 
+     * This is used to enable the stream to be used in `for...of` loops.
+     * 
+     * @returns The stream as an iterable iterator.
+     */
+    [Symbol.iterator](): IterableIterator<T> {
+        return this.stream;
+    }
 }
