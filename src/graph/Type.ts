@@ -10,7 +10,15 @@ export abstract class Type {
     private name: string;
     private supported: boolean;
 
-    constructor(identifier: string, name: string, supported: boolean = true) {
+    /**
+     * Note that some types may not have a name, i.e. array, tuple, etc.
+     * Some hard-coded name may be assigned to them.
+     * 
+     * @param identifier The syntax component identifier, i.e. NumberType.
+     * @param name The lexeme name of the type, i.e. int, number, string.
+     * @param supported Whether this type is supported by the current implementation.
+     */
+    constructor(identifier: string, name: string = '', supported: boolean = true) {
         this.identifier = identifier;
         this.name = name;
         this.supported = supported;
