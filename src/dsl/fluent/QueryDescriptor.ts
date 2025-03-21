@@ -16,14 +16,14 @@ export interface ICanConfigure {
 export interface ICanApplyFromClause {
     /**
      * Apply a pre-constructed from descriptor.
-     * 
+     *
      * @param descriptor Pre-built from descriptor.
      */
     from(descriptor: FromDescriptor): SimpleQuery;
 
     /**
      * Build a from descriptor with the clause and apply it.
-     * 
+     *
      * @param clause From clause.
      */
     from(clause: FromClause): SimpleQuery;
@@ -32,10 +32,10 @@ export interface ICanApplyFromClause {
 export interface ICanApplyWhereClause {
     /**
      * Apply a filter or flow action to the query.
-     * 
+     *
      * Use {@link FilterDescriptor | `FilterDescriptor`} to filter tables, or use
      * {@link FlowDescriptor | `FlowDescriptor`} for flow actions to find path problems.
-     * 
+     *
      * @param param Filter/flow descriptor or clause.
      * @param flow Only required when `param` is {@link FlowDescriptor | `FlowDescriptor`}
      *      or {@link FlowClause | `FlowClause`}.
@@ -43,31 +43,31 @@ export interface ICanApplyWhereClause {
 
     /**
      * Apply a pre-constructed filter descriptor.
-     * 
+     *
      * @param descriptor Pre-built filter descriptor.
      */
     where(descriptor: FilterDescriptor): FilteredQuery;
 
     /**
      * Build a filter descriptor with the clause and apply it.
-     * 
+     *
      * @param clause Filter clause.
      */
     where(clause: FilterClause): FilteredQuery;
 
     /**
      * Apply a pre-constructed flow descriptor.
-     * 
+     *
      * @param descriptor Pre-built flow descriptor.
      */
     where(descriptor: FlowDescriptor): FilteredQuery;
 
     /**
      * Build a flow descriptor with the clause and apply it.
-     * 
+     *
      * Different flow implementation may require different configuration, so you
      * need to specify which flow to use by providing `flow`.
-     * 
+     *
      * @param clause Flow clause.
      * @param flow Flow action builder.
      */
@@ -77,36 +77,33 @@ export interface ICanApplyWhereClause {
 export interface ICanApplySelectClause {
     /**
      * Select columns from the result table.
-     * 
+     *
      * The result column order is the same as the order of the columns in
      * the `columns` array.
-     * 
+     *
      * If there is only one column, you can pass a string instead of an array.
-     * 
+     *
      * > [!WARNING]
      * > Make sure there is only one table left.
-     * 
+     *
      * @param columns Columns to select from the result table.
      */
     select(columns: string | string[]): CompleteQuery;
 }
 
-export interface InitialQuery extends ICanConfigure, ICanApplyFromClause {
-}
+export interface InitialQuery extends ICanConfigure, ICanApplyFromClause {}
 
-export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause {
-}
+export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause {}
 
-export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause {
-}
+export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause {}
 
 export interface CompleteQuery {
     /**
      * Output the result of the query as a string with the specified style.
-     * 
+     *
      * See the format of {@link TablePrettifier.toString | `TablePrettifier.toString`}
      * for available styles.
-     * 
+     *
      * @param style The output style.
      * @returns The result of the query in the specified style.
      */
@@ -116,7 +113,7 @@ export interface CompleteQuery {
 export interface IQueryDescriptor {
     /**
      * Set the database context the query uses.
-     * 
+     *
      * @param dbContext Database context.
      */
     withDatabase(dbContext: DbContext): InitialQuery;
@@ -124,19 +121,19 @@ export interface IQueryDescriptor {
 
 /**
  * Describes a query, which is used to build complex queries in a fluent manner.
- * 
+ *
  * All you need is to combine {@link from | `from`}, {@link where | `where`}, and
  * {@link select | `select`} clauses to build a query.
- * 
+ *
  * You can use multiple {@link from | `from`} to fetch tables from the database. Then,
  * use {@link where | `where`} to filter the tables with filter or flow actions. Finally,
  * use {@link select | `select`} to display specific columns from the result table.
- * 
+ *
  * > [!WARNING]
  * > Make sure there is only one table left before calling {@link select | `select`}.
  * > You can use flow actions to merge tables into one, see {@link FlowDescriptor | `FlowDescriptor`}
  * > for more information.
- * 
+ *
  * @category DSL API
  */
 export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQuery, FilteredQuery, CompleteQuery {
@@ -173,11 +170,13 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         return this.fromDescriptor(clause(new FromDescriptorBuilder()).build());
     }
 
-
     /**
      * See {@link ICanApplyWhereClause | `ICanApplyWhereClause`}.
      */
-    where(param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause, flow?: () => IFlowDescriptorBuilder): FilteredQuery {
+    where(
+        param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause,
+        flow?: () => IFlowDescriptorBuilder
+    ): FilteredQuery {
         if (param instanceof FilterDescriptor) {
             return this.filterDescriptor(param);
         } else if (param instanceof FlowDescriptor) {
@@ -201,7 +200,9 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     private flowDescriptor(descriptor: FlowDescriptor): FilteredQuery {
         const source = this.tables.removeTable(descriptor.properties.sourceAlias);
         const sink = this.tables.removeTable(descriptor.properties.sinkAlias);
-        const barrier = descriptor.properties.barrierAlias ? this.tables.removeTable(descriptor.properties.barrierAlias) : undefined;
+        const barrier = descriptor.properties.barrierAlias
+            ? this.tables.removeTable(descriptor.properties.barrierAlias)
+            : undefined;
         this.tables.addTable(descriptor.apply(source, sink, barrier));
         return this;
     }
@@ -256,7 +257,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     private formatRow(row: any[]): string[] {
-        return row.map(value => {
+        return row.map((value) => {
             if (value == null || value === undefined) {
                 return 'null';
             }
@@ -270,7 +271,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
 
 /**
  * Clause to build a query.
- * 
+ *
  * @category DSL API
  */
 export type Query = (descriptor: InitialQuery) => CompleteQuery;

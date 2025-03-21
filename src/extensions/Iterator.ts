@@ -1,6 +1,6 @@
 /**
  * Iterator for an array.
- * 
+ *
  * @category Extension
  */
 export class ArrayIterator<T> implements Iterator<T> {
@@ -16,12 +16,12 @@ export class ArrayIterator<T> implements Iterator<T> {
         if (this.index < this.array.length) {
             return {
                 done: false,
-                value: this.array[this.index++]
+                value: this.array[this.index++],
             };
         } else {
             return {
                 done: true,
-                value: null
+                value: null,
             };
         }
     }
@@ -29,7 +29,7 @@ export class ArrayIterator<T> implements Iterator<T> {
 
 /**
  * Iterable iterator for an array.
- * 
+ *
  * @category Extension
  */
 export class ArrayIterableIterator<T> implements IterableIterator<T> {
@@ -45,12 +45,12 @@ export class ArrayIterableIterator<T> implements IterableIterator<T> {
         if (this.index < this.array.length) {
             return {
                 done: false,
-                value: this.array[this.index++]
+                value: this.array[this.index++],
             };
         } else {
             return {
                 done: true,
-                value: null
+                value: null,
             };
         }
     }

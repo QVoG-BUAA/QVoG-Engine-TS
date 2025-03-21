@@ -2,9 +2,9 @@ import { ArrayIterableIterator } from '~/extensions/Iterator';
 
 /**
  * Enable stream-like API in TypeScript.
- * 
+ *
  * @typeParam T Type of the stream elements.
- * 
+ *
  * @category Extension
  */
 export class Stream<T> {
@@ -16,7 +16,7 @@ export class Stream<T> {
 
     /**
      * Perform an action on each element of the stream.
-     * 
+     *
      * @param callback Action to perform on each element.
      */
     forEach(callback: (value: T) => void): void {
@@ -27,7 +27,7 @@ export class Stream<T> {
 
     /**
      * Filter elements of the stream.
-     * 
+     *
      * @param predicate Predicate to filter elements.
      * @returns The filtered stream.
      */
@@ -43,7 +43,7 @@ export class Stream<T> {
 
     /**
      * Map elements of the stream to another type.
-     * 
+     *
      * @param callback Mapper function.
      * @returns Mapped stream.
      */
@@ -57,7 +57,7 @@ export class Stream<T> {
 
     /**
      * Check if at least one element satisfies the predicate.
-     * 
+     *
      * @param predicate Predicate.
      * @returns `true` if at least one element satisfies the predicate, `false` otherwise.
      */
@@ -72,7 +72,7 @@ export class Stream<T> {
 
     /**
      * Check if none of the elements satisfy the predicate.
-     * 
+     *
      * @param predicate Predicate.
      * @returns `true` if none of the elements satisfy the predicate, `false` otherwise.
      */
@@ -87,9 +87,9 @@ export class Stream<T> {
 
     /**
      * Return this stream as an iterable iterator.
-     * 
+     *
      * This is used to enable the stream to be used in `for...of` loops.
-     * 
+     *
      * @returns The stream as an iterable iterator.
      */
     [Symbol.iterator](): IterableIterator<T> {

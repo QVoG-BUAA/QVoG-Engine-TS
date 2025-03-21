@@ -2,7 +2,7 @@ import { Query } from '~/dsl/fluent/QueryDescriptor';
 
 /**
  * Result of a query execution.
- * 
+ *
  * @category Engine
  */
 export interface QueryResult {
@@ -26,7 +26,7 @@ export interface QueryResult {
  * Define a query that can be executed by the engine.
  * [0] - Query name.
  * [1] - Query object.
- * 
+ *
  * @category Engine
  */
 export type Queryable = [string, Query];

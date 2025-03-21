@@ -6,18 +6,18 @@ import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
 
 /**
  * Defines the behavior of a from action which is used to fetch data from a table.
- * 
+ *
  * The fetched table will be named with the alias provided. The alias should be unique
- * among all tables in the query. The fetched table will contain one column with the 
+ * among all tables in the query. The fetched table will contain one column with the
  * same name as the table.
- * 
+ *
  * From action may fetch data in two ways:
- * 
+ *
  * - Fetch values: Stores the fetched values in memory, so they can be traversed later.
- * - Fetch predicate: Only stores the predicate. This way, you can still check if the 
+ * - Fetch predicate: Only stores the predicate. This way, you can still check if the
  *      table contains a value or not, and significantly reduce memory usage and improve
  *      performance.
- * 
+ *
  * @category DSL API
  */
 export class FromDescriptor {
@@ -33,7 +33,7 @@ export class FromDescriptor {
 /**
  * The complete from action clause, which is a callback to build a
  * {@link FromDescriptor | `FromDescriptor`} on demand.
- * 
+ *
  * @category DSL API
  */
 export type FromClause = (clause: IFromDescriptorBuilder) => ICanBuildFromDescriptor;
@@ -41,14 +41,14 @@ export type FromClause = (clause: IFromDescriptorBuilder) => ICanBuildFromDescri
 export interface IFromDescriptorBuilder {
     /**
      * Fetch values and store them in memory.
-     * 
+     *
      * @param predicate The predicate the values should satisfy.
      */
     withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
 
     /**
      * Only store the predicate in table.
-     * 
+     *
      * @param predicate The predicate the values should satisfy.
      */
     withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias;
@@ -57,7 +57,7 @@ export interface IFromDescriptorBuilder {
 export interface ICanSetAlias {
     /**
      * Set the alias for the table.
-     * 
+     *
      * @param alias A unique name for the table.
      */
     as(alias: string): ICanBuildFromDescriptor;
@@ -73,7 +73,7 @@ export interface ICanBuildFromDescriptor {
 
 /**
  * Builder for {@link FromDescriptor | `FromDescriptor`}.
- * 
+ *
  * @category DSL API
  */
 export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAlias, ICanBuildFromDescriptor {
@@ -86,7 +86,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
      */
     withData(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 0;
-        this.predicate = (predicate instanceof ValuePredicate) ? predicate : ValuePredicate.of(predicate);
+        this.predicate = predicate instanceof ValuePredicate ? predicate : ValuePredicate.of(predicate);
         return this;
     }
 
@@ -95,7 +95,7 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
      */
     withPredicate(predicate: ValuePredicate | ValuePredicateFn): ICanSetAlias {
         this.choice = 1;
-        this.predicate = (predicate instanceof ValuePredicate) ? predicate : ValuePredicate.of(predicate);
+        this.predicate = predicate instanceof ValuePredicate ? predicate : ValuePredicate.of(predicate);
         return this;
     }
 

@@ -3,7 +3,7 @@ import { GremlinConnection } from '~/db/gremlin/Connection';
 
 /**
  * Gremlin server connection options.
- * 
+ *
  * @category Database
  */
 export interface GremlinOptions {
@@ -13,7 +13,7 @@ export interface GremlinOptions {
 
 /**
  * Database options. Currently only supports Gremlin.
- * 
+ *
  * @category Database
  */
 export interface DatabaseOptions {
@@ -22,7 +22,7 @@ export interface DatabaseOptions {
 
 /**
  * Database connection context, holding the connection to the database.
- * 
+ *
  * @category Database
  */
 export class DbContext {
@@ -38,7 +38,7 @@ export class DbContext {
 
     /**
      * Get the Gremlin connection, see {@link GremlinConnection | `GremlinConnection`}.
-     * 
+     *
      * @returns Gremlin connection.
      */
     getGremlinConnection(): GremlinConnection {

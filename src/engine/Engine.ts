@@ -8,7 +8,7 @@ import { DefaultResultFormatter, IResultFormatter } from '~/extensions/ResultFor
 
 /**
  * The execution engine of QVoG that runs queries and outputs results.
- * 
+ *
  * @category Engine
  */
 export class QVoGEngine {
@@ -36,10 +36,10 @@ export class QVoGEngine {
 
     /**
      * Get the engine instance as a singleton.
-     * 
+     *
      * The filename parameter is only used for the first time to initialize the engine.
      * Subsequent calls will return the same instance without re-initializing it.
-     * 
+     *
      * @param filename Configuration file path.
      * @returns The engine instance.
      */
@@ -56,7 +56,7 @@ export class QVoGEngine {
 
     /**
      * Set the result formatter for the engine.
-     * 
+     *
      * @param formatter Result formatter, see {@link IResultFormatter | `IResultFormatter`}.
      * @returns Itself for chaining.
      */
@@ -67,7 +67,7 @@ export class QVoGEngine {
 
     /**
      * Set the query output style, {@link TablePrettifier | `TablePrettifier`} for supported styles.
-     * 
+     *
      * @param style The style of the output.
      * @returns Itself for chaining.
      */
@@ -78,10 +78,10 @@ export class QVoGEngine {
 
     /**
      * Set the output stream for the engine.
-     * 
+     *
      * It provides a flexible way to output result to different destinations,
      * such as console, file, etc.
-     * 
+     *
      * @param output Output stream.
      * @returns Itself for chaining.
      */
@@ -93,7 +93,7 @@ export class QVoGEngine {
 
     /**
      * Execute a query synchronously.
-     * 
+     *
      * @param query Query.
      * @returns Itself for chaining.
      */
@@ -104,7 +104,7 @@ export class QVoGEngine {
 
     /**
      * Execute a query asynchronously.
-     * 
+     *
      * @param query Query.
      * @returns Itself for chaining.
      */
@@ -117,20 +117,20 @@ export class QVoGEngine {
 
     /**
      * Execute a list of queries one-by-one synchronously.
-     * 
+     *
      * @param queries Queries.
      * @returns Itself for chaining.
      */
     submit(queries: Queryable[]): QVoGEngine {
-        queries.forEach(query => this.execute(query));
+        queries.forEach((query) => this.execute(query));
         return this;
     }
 
     /**
      * Execute a list of queries one-by-one asynchronously.
-     * 
+     *
      * Note that the queries are executed in sequence, not in parallel.
-     * 
+     *
      * @param queries Queries.
      * @returns Itself for chaining.
      */
@@ -165,11 +165,13 @@ export class QVoGEngine {
         const executionTime = end - start;
         this.log.info(`Query "${name}" executed in ${executionTime}ms`);
 
-        this.output.println(this.formatter.format({
-            name: name,
-            result: result,
-            milliseconds: executionTime
-        }));
+        this.output.println(
+            this.formatter.format({
+                name: name,
+                result: result,
+                milliseconds: executionTime,
+            })
+        );
 
         this.totalExecutionTime += executionTime;
     }

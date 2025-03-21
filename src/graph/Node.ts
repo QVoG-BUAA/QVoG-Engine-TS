@@ -3,14 +3,14 @@ import { CodeProperty, FileProperty } from '~/graph/Defines';
 
 /**
  * Base class for all graph nodes.
- * 
+ *
  * A graph node represents a vertex in the graph database, only providing more
  * convenient access to the properties.
- * 
+ *
  * There are two types of nodes:
  * - {@link CodeNode | `CodeNode`} representing one line of code.
  * - {@link FileNode | `FileNode`} representing a file.
- * 
+ *
  * @category Graph
  */
 export abstract class GraphNode {
@@ -22,7 +22,7 @@ export abstract class GraphNode {
 
     /**
      * Get the vertex id in the database.
-     * 
+     *
      * @returns The id.
      */
     getId(): number {
@@ -31,7 +31,7 @@ export abstract class GraphNode {
 
     /**
      * Get the underlying gremlin vertex.
-     * 
+     *
      * @returns The vertex.
      */
     getVertex(): Vertex {
@@ -41,10 +41,10 @@ export abstract class GraphNode {
 
 /**
  * Represents a code node in the graph.
- * 
+ *
  * The parsed {@link Value | `Value`} from the AST is stored in {@link Context | `Context`}
  * and can be retrieved using {@link Context.getValue | `Context.getValue`}.
- * 
+ *
  * @category Graph
  */
 export class CodeNode extends GraphNode {
@@ -57,7 +57,7 @@ export class CodeNode extends GraphNode {
 
     /**
      * Get the code property of the node.
-     * 
+     *
      * @returns Code property.
      */
     getProperty(): CodeProperty {
@@ -67,7 +67,7 @@ export class CodeNode extends GraphNode {
 
 /**
  * Represents a file node in the graph.
- * 
+ *
  * @category Graph
  */
 export class FileNode extends GraphNode {
@@ -80,7 +80,7 @@ export class FileNode extends GraphNode {
 
     /**
      * Get the file property of the node.
-     * 
+     *
      * @returns File property.
      */
     getProperty(): FileProperty {

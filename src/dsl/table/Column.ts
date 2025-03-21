@@ -10,7 +10,7 @@ export function valueIndex(value: Value): number {
 
 /**
  * Represents a column in a table.
- * 
+ *
  * @category DSL Data
  */
 export abstract class Column {
@@ -24,7 +24,7 @@ export abstract class Column {
 
     /**
      * Get the name of the column.
-     * 
+     *
      * @returns The name.
      */
     getName(): string {
@@ -33,11 +33,11 @@ export abstract class Column {
 
     /**
      * Get the size of the column.
-     * 
+     *
      * > [!WARNING]
      * > If the column is a {@link PredicateColumn | `PredicateColumn`}, then the
      * > size is always -1.
-     * 
+     *
      * @returns The size of the column.
      */
     getSize(): number {
@@ -47,7 +47,7 @@ export abstract class Column {
     /**
      * Predicate column has size of -1, so it is safe to use
      * this method to check if the column is empty.
-     * 
+     *
      * @returns `true` if the column is empty, `false` otherwise.
      */
     isEmpty(): boolean {
@@ -61,7 +61,7 @@ export abstract class Column {
 
     /**
      * Check if the column has an index.
-     * 
+     *
      * @returns `true` if the column has an index, `false` otherwise.
      */
     hasIndex(): boolean {
@@ -70,14 +70,14 @@ export abstract class Column {
 
     /**
      * Add a value to the column.
-     * 
+     *
      * @param value Value to add.
      */
     abstract addValue(value: any): void;
 
     /**
      * Add multiple values to the column.
-     * 
+     *
      * @param values Values to add.
      */
     addValues(values: any[]): void {
@@ -88,14 +88,14 @@ export abstract class Column {
 
     /**
      * Get the value at the specified row index.
-     * 
+     *
      * @param index Index of the value to get.
      */
     abstract getValue(index: number): any;
 
     /**
      * Get the value with index key if it supports index.
-     * 
+     *
      * @param key The index key.
      * @throws Error if the column does not support index.
      */
@@ -105,14 +105,14 @@ export abstract class Column {
 
     /**
      * Check if the column contains the specified value.
-     * 
+     *
      * @param value The value to check.
      */
     abstract containsValue(value: any): boolean;
 
     /**
      * Check if the column contains the specified key if it supports index.
-     * 
+     *
      * @param key The index key.
      * @throws Error if the column does not support index.
      */
@@ -122,15 +122,14 @@ export abstract class Column {
 
     /**
      * Duplicate the column.
-     * 
+     *
      * This is useful when you want to create a copy of the column.
      * If `schemaOnly` is true, only the schema of the column is duplicated, that
      * is to say, index function is copied but not the data.
-     * 
+     *
      * @param schemaOnly Whether to duplicate only the schema.
      */
     abstract duplicate(schemaOnly: boolean): Column;
-
 
     [Symbol.iterator](): Iterator<any> {
         return this.iterator();
@@ -144,7 +143,7 @@ export abstract class Column {
 
 /**
  * Column that contains {@link Value | `Value`} objects.
- * 
+ *
  * @category DSL Data
  */
 export class DataColumn extends Column {
@@ -249,10 +248,10 @@ export class DataColumn extends Column {
 
 /**
  * Column that only contains the predicate for its values.
- * 
+ *
  * This can be useful when there are too many values satisfying the predicate, but
  * you only need to know if they are present in the column or not.
- * 
+ *
  * @category DSL Data
  */
 export class PredicateColumn extends Column {
@@ -273,7 +272,7 @@ export class PredicateColumn extends Column {
 
     /**
      * You cannot add value to a predicate column.
-     * 
+     *
      * @throws Error Method not supported.
      */
     addValue(value: any): void {
@@ -282,7 +281,7 @@ export class PredicateColumn extends Column {
 
     /**
      * You cannot get value from a predicate column.
-     * 
+     *
      * @throws Error Method not supported.
      */
     getValue(index: number): any {
@@ -305,7 +304,7 @@ export class PredicateColumn extends Column {
 
     /**
      * You cannot iterate over a predicate column.
-     * 
+     *
      * @throws Error Method not supported.
      */
     iterator(): Iterator<any> {
@@ -315,7 +314,7 @@ export class PredicateColumn extends Column {
 
 /**
  * A column that can contain any type of value.
- * 
+ *
  * @category DSL Data
  */
 export class AnyColumn extends Column {

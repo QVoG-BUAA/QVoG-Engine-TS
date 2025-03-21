@@ -2,7 +2,7 @@ import { driver, process, structure } from 'gremlin';
 
 /**
  * Connection to gremlin server.
- * 
+ *
  * @category Database
  */
 export class GremlinConnection {

@@ -10,10 +10,10 @@ type NodeRegistry = Map<number, NodeRegistration>;
 
 /**
  * Context to manage the graph nodes and values.
- * 
+ *
  * One execution of the engine will have one context shared across all queries.
  * {@link Value | `Value`} will be cached in the context to avoid re-parsing the AST.
- * 
+ *
  * @category Graph
  */
 export class Context {
@@ -28,10 +28,10 @@ export class Context {
 
     /**
      * Get the AST value associated with a node.
-     * 
+     *
      * If vertex or vertex id is provided, and the corresponding node does not exist,
      * it will first parse the vertex and register the node, then return the value.
-     * 
+     *
      * @param key A value that can be used to identify a node.
      * @returns The value associated with the key.
      */
@@ -41,13 +41,13 @@ export class Context {
 
     /**
      * Get the complete node associated with a key.
-     * 
+     *
      * If vertex or vertex id is provided, and the corresponding node does not exist,
      * it will first parse the vertex and register the node, then return the node.
-     * 
+     *
      * You may need this to get the node from a value, as the value does not contain
      * the code or file information.
-     * 
+     *
      * @param key A value that can be used to identify a node.
      * @returns The node associated with the key.
      */
@@ -124,21 +124,21 @@ export class Context {
             code: this.formatCode(properties.get('code') || ''),
             file: properties.get('file') || '',
             json: json,
-            functionDefName: properties.get('functionDefName')
+            functionDefName: properties.get('functionDefName'),
         };
 
         const node = new CodeNode(vertex, props);
         const value = this.factory.buildValue(json);
 
         // link all values in the AST to this node
-        value.stream().forEach(v => v.setId(node.getId()));
+        value.stream().forEach((v) => v.setId(node.getId()));
 
         return [node, value];
     }
 
     private registerFileNode(vertex: Vertex, properties: Map<string, any>): NodeRegistration {
         const props = {
-            path: properties.get('file')
+            path: properties.get('file'),
         };
 
         const node = new FileNode(vertex, props);
@@ -150,7 +150,7 @@ export class Context {
 
     /**
      * Remove new lines and strip consecutive spaces.
-     * 
+     *
      * FIXME: This may unintentionally strip string literals in code as well.
      */
     private formatCode(code: string): string {

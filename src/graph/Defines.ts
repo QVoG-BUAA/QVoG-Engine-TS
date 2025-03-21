@@ -1,8 +1,8 @@
 /**
  * All AST node should satisfy this interface.
- * 
+ *
  * Extend this interface for each type of AST node.
- * 
+ *
  * @category Graph
  */
 export interface AstJson {
@@ -14,7 +14,7 @@ export interface AstJson {
 
 /**
  * Properties of a code node.
- * 
+ *
  * @category Graph
  */
 export interface CodeProperty {
@@ -46,7 +46,7 @@ export interface CodeProperty {
 
 /**
  * Properties of a file node.
- * 
+ *
  * @category Graph
  */
 export interface FileProperty {

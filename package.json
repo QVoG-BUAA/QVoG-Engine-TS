@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsup",
     "lint": "eslint src --fix",
+    "format": "prettier --config .prettierrc *.ts src/**/*.ts --write",
     "docs": "typedoc src/index.ts --out docs"
   },
   "keywords": [
@@ -31,6 +32,7 @@
     "@types/gremlin": "^3.6.7",
     "@types/node": "^22.13.8",
     "eslint": "^9.21.0",
+    "prettier": "^3.5.3",
     "tsup": "^8.4.0",
     "typedoc": "^0.27.9",
     "typescript": "^5.7.2",

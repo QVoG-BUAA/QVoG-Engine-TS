@@ -3,7 +3,7 @@ import { QueryResult } from '~/engine/Defines';
 /**
  * Interface for result formatters. It wraps the result of a query execution by
  * adding descriptive information.
- * 
+ *
  * @category Extensions
  */
 export abstract class IResultFormatter {
@@ -13,7 +13,7 @@ export abstract class IResultFormatter {
 
 /**
  * Default result formatter, output as plain text.
- * 
+ *
  * @category Extensions
  */
 export class DefaultResultFormatter extends IResultFormatter {
@@ -28,7 +28,7 @@ export class DefaultResultFormatter extends IResultFormatter {
 
 /**
  * Result formatter that outputs the result as indented JSON.
- * 
+ *
  * @category Extensions
  */
 export class ConsoleJsonResultFormatter extends IResultFormatter {
@@ -36,7 +36,7 @@ export class ConsoleJsonResultFormatter extends IResultFormatter {
         const json = {
             name: result.name,
             result: JSON.parse(result.result),
-            milliseconds: result.milliseconds
+            milliseconds: result.milliseconds,
         };
         return JSON.stringify(json, null, 4);
     }
@@ -48,7 +48,7 @@ export class ConsoleJsonResultFormatter extends IResultFormatter {
 
 /**
  * Output as minified JSON.
- * 
+ *
  * @category Extensions
  */
 export class JsonResultFormatter extends IResultFormatter {
@@ -63,7 +63,7 @@ export class JsonResultFormatter extends IResultFormatter {
         const json = {
             name: result.name,
             result: result.result,
-            milliseconds: result.milliseconds
+            milliseconds: result.milliseconds,
         };
         return this.minify ? JSON.stringify(json) : JSON.stringify(json, null, 4);
     }

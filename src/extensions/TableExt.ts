@@ -1,6 +1,6 @@
 /**
  * Format result table into a prettified string.
- * 
+ *
  * @category Extension
  */
 export class TablePrettifier {
@@ -9,7 +9,7 @@ export class TablePrettifier {
 
     /**
      * Add a header to the table.
-     * 
+     *
      * @param header Header to add.
      */
     addHeader(header: string): void {
@@ -18,7 +18,7 @@ export class TablePrettifier {
 
     /**
      * Add a row to the table. Row size must match header size.
-     * 
+     *
      * @param row Row to add.
      */
     addRow(row: Array<string>): void {
@@ -32,11 +32,11 @@ export class TablePrettifier {
      * Output the table as a string with the specified format.
      *
      * The format can be one of the following:
-     * 
+     *
      * - markdown: Markdown syntax
      * - json: JSON with indentation of 4 spaces
      * - json-compact: JSON without indentation and newlines
-     * 
+     *
      * @param format The output format.
      * @returns The table as a string in the specified format.
      */
@@ -59,7 +59,7 @@ export class TablePrettifier {
             result += ` ${header} |`;
         }
         result += '\n|';
-        for (const header of this.headers) {
+        for (const _ of this.headers) {
             result += ' --- |';
         }
         result += '\n';
@@ -75,7 +75,7 @@ export class TablePrettifier {
     }
 
     private toJson(compact: boolean): string {
-        const json = { 'headers': this.headers, 'rows': this.rows };
+        const json = { headers: this.headers, rows: this.rows };
         return compact ? JSON.stringify(json) : JSON.stringify(json, null, 4);
     }
 }

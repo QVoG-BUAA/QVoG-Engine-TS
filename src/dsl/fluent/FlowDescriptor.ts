@@ -11,31 +11,31 @@ export type FlowAction = (source: Table, sink: Table, barrier?: Table) => Table;
 /**
  * @category DSL API
  */
-export type FlowProperty = { sourceAlias: string, sinkAlias: string, barrierAlias?: string };
+export type FlowProperty = { sourceAlias: string; sinkAlias: string; barrierAlias?: string };
 
 /**
  * Defines the behavior of a flow action.
- * 
+ *
  * Flow actions are used to find path problems, it checks the reachability from source
  * to sink without encountering the barrier.
- * 
+ *
  * After the flow action is applied, the source, sink and barrier tables will be removed,
  * and a new result table with the alias of the flow will be created. The result table
  * contains the paths found with the following columns:
- * 
+ *
  * - `sourceAlias` ({@link Value | `Value`}): source value of the path
  * - `sinkAlias` ({@link Value | `Value`}): sink value of the path
  * - `barrierAlias` ({@link Value | `Value`}): barrier value of the path
  * - `alias` ({@link FlowPath | `FlowPath`}): the path found
- * 
+ *
  * > [!NOTE]
  * > Currently, the barrier column in the result is not used, but still exists.
  * > So, it always contains null.
- * 
+ *
  * > [!WARNING]
- * > Since the flow action will traverse values in the source table, so the source 
+ * > Since the flow action will traverse values in the source table, so the source
  * > table must be fetched by a from clause with {@link DataColumn | `DataColumn`}.
- * 
+ *
  * @category DSL API
  */
 export class FlowDescriptor {
@@ -64,7 +64,7 @@ export class FlowDescriptor {
 /**
  * The complete filter action clause, which is a callback to build a
  * {@link FlowDescriptor | `FlowDescriptor`} on demand.
- * 
+ *
  * @category DSL API
  */
 export type FlowClause = (clause: IFlowDescriptorBuilder) => ICanBuildFlowDescriptor;
@@ -73,7 +73,7 @@ export interface IFlowDescriptorBuilder extends ICanSetFlowSource {
     /**
      * Different flow implementation may require different configuration, which can
      * be done by defining their own feature specifications.
-     * 
+     *
      * @param features Custom features.
      */
     configure(features: any): IFlowDescriptorBuilder;
@@ -82,7 +82,7 @@ export interface IFlowDescriptorBuilder extends ICanSetFlowSource {
 export interface ICanSetFlowSource {
     /**
      * Set the source table of the flow.
-     * 
+     *
      * @param alias Alias of the source table.
      */
     source(alias: string): ICanSetFlowBarrier;
@@ -90,19 +90,19 @@ export interface ICanSetFlowSource {
 
 export interface ICanSetFlowSink {
     /**
-    * Set the sink table of the flow.
-    * 
-    * @param alias Alias of the sink table.
-    */
+     * Set the sink table of the flow.
+     *
+     * @param alias Alias of the sink table.
+     */
     sink(alias: string): ICanSetFlowAlias;
 }
 
 export interface ICanSetFlowBarrier extends ICanSetFlowSink {
     /**
-    * Set the barrier table of the flow.
-    * 
-    * @param alias Alias of the barrier table.
-    */
+     * Set the barrier table of the flow.
+     *
+     * @param alias Alias of the barrier table.
+     */
     barrier(alias: string): ICanSetFlowSink;
 }
 
@@ -123,17 +123,18 @@ export interface ICanBuildFlowDescriptor {
 
 /**
  * Base class for {@link FlowDescriptor | `FlowDescriptor`} builders.
- * 
+ *
  * @category DSL API
  */
-export abstract class FlowDescriptorBuilder implements
-    IFlowDescriptorBuilder,
-    ICanSetFlowSource,
-    ICanSetFlowSink,
-    ICanSetFlowBarrier,
-    ICanSetFlowAlias,
-    ICanBuildFlowDescriptor {
-
+export abstract class FlowDescriptorBuilder
+    implements
+        IFlowDescriptorBuilder,
+        ICanSetFlowSource,
+        ICanSetFlowSink,
+        ICanSetFlowBarrier,
+        ICanSetFlowAlias,
+        ICanBuildFlowDescriptor
+{
     protected alias: string = '';
     protected property: FlowProperty = { sourceAlias: '', sinkAlias: '' };
 
@@ -164,17 +165,17 @@ export abstract class FlowDescriptorBuilder implements
 
 /**
  * Basic flow builder with default build method.
- * 
+ *
  * Custom flow builders should extend this class.
- * 
+ *
  * @category DSL API
  */
 export abstract class BaseFlow extends FlowDescriptorBuilder {
     protected abstract exists(current: Value, source: Column, sink: Column, barrier: Column, result: Table): void;
 
     build(): FlowDescriptor {
-        return new FlowDescriptor(this.alias, this.property,
-            (source: Table, sink: Table, barrier?: Table) => this.apply(source, sink, barrier)
+        return new FlowDescriptor(this.alias, this.property, (source: Table, sink: Table, barrier?: Table) =>
+            this.apply(source, sink, barrier)
         );
     }
 

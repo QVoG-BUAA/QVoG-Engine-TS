@@ -4,13 +4,13 @@ import { CodeNode, FileNode, GraphNode } from '~/graph/Node';
 
 /**
  * Utility functions for graph operations.
- * 
+ *
  * @category Extension
  */
 export class GraphExt {
     /**
      * Format a graph node into a human-readable string.
-     * 
+     *
      * @param obj Can be vertex ID, GraphNode or Value.
      * @returns Formatted string.
      */
@@ -51,4 +51,4 @@ export class GraphExt {
         }
         return description;
     }
-};
+}

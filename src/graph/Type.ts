@@ -2,7 +2,7 @@ import { AstJson } from './Defines';
 
 /**
  * Base class for all types.
- * 
+ *
  * @category Graph
  */
 export abstract class Type {
@@ -18,7 +18,7 @@ export abstract class Type {
 
     /**
      * The syntax component identifier, i.e. NumberType.
-     * 
+     *
      * @returns The identifier.
      */
     getIdentifier(): string {
@@ -27,7 +27,7 @@ export abstract class Type {
 
     /**
      * The lexeme name of the type, i.e. int, number, string.
-     * 
+     *
      * @returns The name.
      */
     getName(): string {
@@ -37,7 +37,7 @@ export abstract class Type {
     /**
      * Whether this type is supported by the current implementation.
      * Usually, only {@link InvalidType | `InvalidType`} should be marked as unsupported.
-     * 
+     *
      * @returns Whether the type is supported.
      */
     isSupported(): boolean {
@@ -47,7 +47,7 @@ export abstract class Type {
 
 /**
  * Represents an invalid type that cannot be parsed from AST.
- * 
+ *
  * @category Graph
  */
 export class InvalidType extends Type {
@@ -57,7 +57,7 @@ export class InvalidType extends Type {
 
     /**
      * A factory method to create an instance of InvalidType.
-     * 
+     *
      * @param spec Identifier or the AST json.
      * @returns An instance of InvalidType.
      */

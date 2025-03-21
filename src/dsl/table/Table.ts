@@ -3,7 +3,7 @@ import { Row, RowWithoutHeader } from '~/dsl/Defines';
 
 /**
  * A table is a collection of columns.
- * 
+ *
  * @category DSL Data
  */
 export class Table {
@@ -18,7 +18,7 @@ export class Table {
 
     /**
      * Get the name of the table.
-     * 
+     *
      * @returns The name of the table.
      */
     getName(): string {
@@ -28,7 +28,7 @@ export class Table {
     /**
      * > [!WARNING]
      * > If the table contains predicate column, then this size is invalid.
-     * 
+     *
      * @returns The size of the table, i.e. the number of rows.
      */
     getSize(): number {
@@ -44,11 +44,11 @@ export class Table {
 
     /**
      * Add a column to the table.
-     * 
+     *
      * If the size of the column is not equal to the size of the table, then the
      * default value is used to fill the column or the table, so that the table
      * ends up with the maximum size of all columns.
-     * 
+     *
      * @param column Column to add.
      * @param defaultValue Default value to fill the column.
      */
@@ -68,7 +68,7 @@ export class Table {
             column.addValues(Array(newSize - column.getSize()).fill(defaultValue));
         }
         if (this.size < newSize) {
-            this.columns.forEach(column => {
+            this.columns.forEach((column) => {
                 column.addValues(Array(newSize - column.getSize()).fill(defaultValue));
             });
         }
@@ -79,21 +79,21 @@ export class Table {
 
     /**
      * Remove a column from the table.
-     * 
+     *
      * @param name The name of the column to remove.
      */
     removeColumn(name: string): void {
-        this.columns = this.columns.filter(column => column.getName() !== name);
+        this.columns = this.columns.filter((column) => column.getName() !== name);
     }
 
     /**
      * Get a column from the table.
-     * 
+     *
      * @param name The name of the column to get.
      * @returns The column with the given name.
      */
     getColumn(name: string): Column {
-        const column = this.columns.find(column => column.getName() === name);
+        const column = this.columns.find((column) => column.getName() === name);
         if (!column) {
             throw new Error(`Column with name "${name}" does not exist`);
         }
@@ -102,20 +102,20 @@ export class Table {
 
     /**
      * Check if the table has a column with the given name.
-     * 
+     *
      * @param name The name of the column to check.
      * @returns `true` if the table has a column with the given name, `false` otherwise.
      */
     hasColumn(name: string): boolean {
-        return this.columns.some(column => column.getName() === name);
+        return this.columns.some((column) => column.getName() === name);
     }
 
     /**
      * Add a row to the table.
-     * 
+     *
      * If the column is missing in the row, then the `null` value is used.
      * If the row has more columns than the table, then the extra columns are ignored.
-     * 
+     *
      * @param row Row to add.
      */
     addRow(row: Row): void {
@@ -127,7 +127,7 @@ export class Table {
 
     /**
      * Get a row from the table.
-     * 
+     *
      * @param index Row index.
      * @returns The row at the given index.
      */
@@ -141,18 +141,18 @@ export class Table {
 
     /**
      * Get the headers of the table.
-     * 
+     *
      * @returns The headers.
      */
     getHeaders(): string[] {
-        return this.columns.map(column => column.getName());
+        return this.columns.map((column) => column.getName());
     }
 
     /**
      * Get a row from the table without the header.
-     * 
+     *
      * Use this only if you know the order of the columns.
-     * 
+     *
      * @param index Row index.
      * @returns Row without the header at the given index.
      */
@@ -170,7 +170,7 @@ export class Table {
 
     /**
      * Get an iterator to iterate over the rows in the table.
-     * 
+     *
      * @returns The iterator.
      */
     iterator(): Iterator<Row> {
@@ -181,13 +181,13 @@ export class Table {
                     return { value: this.getRow(index++), done: false };
                 }
                 return { value: null, done: true };
-            }
+            },
         };
     }
 
     /**
      * Get an iterator to iterate over the rows in the table without the header.
-     * 
+     *
      * @returns The iterator.
      */
     iteratorWithoutHeader(): Iterator<RowWithoutHeader> {
@@ -198,16 +198,16 @@ export class Table {
                     return { value: this.getRowWithoutHeader(index++), done: false };
                 }
                 return { value: null, done: true };
-            }
+            },
         };
     }
 
     /**
      * Duplicate the table.
-     * 
+     *
      * It calls the {@link Column.duplicate | `Column.duplicate`} method on each column
      * to duplicate the entire table.
-     * 
+     *
      * @param schemaOnly If true, only the schema is duplicated.
      * @returns The duplicated table.
      */
@@ -221,7 +221,7 @@ export class Table {
 
     /**
      * If the table contains exactly one column, then it returns that column.
-     * 
+     *
      * @returns The table as a column.
      */
     asColumn(): Column {
@@ -234,11 +234,11 @@ export class Table {
 
 /**
  * A set of tables.
- * 
+ *
  * Every call to {@link QueryDescriptor.from | `from`} will create a new table, so
- * you will end up with a set of tables. It is managed automatically by 
+ * you will end up with a set of tables. It is managed automatically by
  * {@link QueryDescriptor}, so you don't need to worry about it.
- * 
+ *
  * @category DSL Data
  */
 export class TableSet {

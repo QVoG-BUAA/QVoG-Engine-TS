@@ -1,4 +1,4 @@
-import { CodeNode, GraphNode } from '~/graph/Node';
+import { CodeNode } from '~/graph/Node';
 import { Stream } from '~/extensions/Stream';
 import { Configuration } from '~/Configuration';
 import { InvalidType, Type } from '~/graph/Type';
@@ -6,7 +6,7 @@ import { AstJson } from './Defines';
 
 /**
  * Base class for all values.
- * 
+ *
  * @category Graph
  */
 export abstract class Value {
@@ -22,14 +22,14 @@ export abstract class Value {
 
     /**
      * Get the node in the graph database this value is associated with.
-     * 
-     * Value only represents the AST of the node in the database, use this 
+     *
+     * Value only represents the AST of the node in the database, use this
      * method to get the complete node, see {@link CodeNode | `CodeNode`} for
      * more information.
-     * 
-     * FIXME: All values should be associated with `CodeNode`, so no type check is 
+     *
+     * FIXME: All values should be associated with `CodeNode`, so no type check is
      * performed here.
-     * 
+     *
      * @returns The complete node in the graph database this value is associated with.
      */
     getNode(): CodeNode {
@@ -38,9 +38,9 @@ export abstract class Value {
 
     /**
      * Get the original line of code in the source file.
-     * 
+     *
      * All values in one node share the same code.
-     * 
+     *
      * @returns The original
      */
     getCode(): string {
@@ -55,8 +55,8 @@ export abstract class Value {
     }
 
     /**
-    * Get the id of the vertex in the graph database this value represents.
-    */
+     * Get the id of the vertex in the graph database this value represents.
+     */
     getId(): number {
         if (!this.id) {
             throw new Error('Value id not available');
@@ -66,7 +66,7 @@ export abstract class Value {
 
     /**
      * The syntax component identifier, i.e. ArkAssignStmt.
-     * 
+     *
      * @returns The identifier.
      */
     getIdentifier(): string {
@@ -79,7 +79,7 @@ export abstract class Value {
 
     /**
      * By default, the value has an invalid type, see `InvalidType`.
-     * 
+     *
      * @returns The type of this value.
      */
     getType(): Type {
@@ -89,7 +89,7 @@ export abstract class Value {
     /**
      * Values that cannot be parsed from AST will be marked as unsupported.
      * Usually, only `InvalidValue` should be marked as unsupported.
-     * 
+     *
      * @returns Whether this value is supported by the current implementation.
      */
     isSupported(): boolean {
@@ -99,9 +99,9 @@ export abstract class Value {
     /**
      * This method is used to get the stream representation of this value.
      * It depends on the implementation of the `elements` method.
-     * 
+     *
      * See `Stream` for stream operations.
-     * 
+     *
      * @returns A stream of values.
      */
     stream(): Stream<Value> {
@@ -118,7 +118,7 @@ export abstract class Value {
 
 /**
  * Represents a value that could not be parsed from the AST.
- * 
+ *
  * @category Graph
  */
 export class InvalidValue extends Value {
@@ -128,7 +128,7 @@ export class InvalidValue extends Value {
 
     /**
      * A factory method to create an instance of InvalidValue.
-     * 
+     *
      * @param spec Identifier or the AST json.
      * @returns An instance of InvalidValue.
      */

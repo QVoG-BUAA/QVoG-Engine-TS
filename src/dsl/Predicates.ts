@@ -4,9 +4,9 @@ import { CodeNode, FileNode, GraphNode } from '~/graph/Node';
 
 /**
  * A predicate that tests a {@link Value | `Value`}.
- * 
+ *
  * This function type declaration makes functional programming easier.
- * 
+ *
  * @category Predicates
  */
 export type ValuePredicateFn = (value: Value) => boolean;
@@ -14,7 +14,7 @@ export type ValuePredicateFn = (value: Value) => boolean;
 /**
  * Class wrapper for {@link ValuePredicateFn | `ValuePredicateFn`} to provide
  * runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class ValuePredicate {
@@ -33,7 +33,7 @@ export class ValuePredicate {
 
     /**
      * Get a predicate that always returns `true`.
-     * 
+     *
      * @returns A predicate that always returns `true`.
      */
     static any(): ValuePredicate {
@@ -42,7 +42,7 @@ export class ValuePredicate {
 
     /**
      * Get a predicate that always returns `false`.
-     * 
+     *
      * @returns A predicate that always returns `false`.
      */
     static none(): ValuePredicate {
@@ -52,7 +52,7 @@ export class ValuePredicate {
 
 /**
  * A predicate that tests a {@link GraphNode | `GraphNode`}.
- * 
+ *
  * @category Predicates
  */
 export type NodePredicateFn = (node: GraphNode) => boolean;
@@ -60,7 +60,7 @@ export type NodePredicateFn = (node: GraphNode) => boolean;
 /**
  * Class wrapper for {@link NodePredicateFn | `NodePredicateFn`} to provide
  * runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class NodePredicate {
@@ -94,7 +94,7 @@ export class NodePredicate {
 
 /**
  * A predicate that tests a {@link FileNode | `FileNode`}.
- * 
+ *
  * @category Predicates
  */
 export type FileNodePredicateFn = (node: FileNode) => boolean;
@@ -102,7 +102,7 @@ export type FileNodePredicateFn = (node: FileNode) => boolean;
 /**
  * Class wrapper for {@link FileNodePredicateFn | `FileNodePredicateFn`} to
  * provide runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class FileNodePredicate {
@@ -136,7 +136,7 @@ export class FileNodePredicate {
 
 /**
  * A predicate that tests a {@link CodeNode | `CodeNode`}.
- * 
+ *
  * @category Predicates
  */
 export type CodeNodePredicateFn = (node: CodeNode) => boolean;
@@ -144,7 +144,7 @@ export type CodeNodePredicateFn = (node: CodeNode) => boolean;
 /**
  * Class wrapper for {@link CodeNodePredicateFn | `CodeNodePredicateFn`} to
  * provide runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class CodeNodePredicate {
@@ -178,7 +178,7 @@ export class CodeNodePredicate {
 
 /**
  * A predicate that tests a {@link Row | `Row`}.
- * 
+ *
  * @category Predicates
  */
 export type RowPredicateFn = (row: Row) => boolean;
@@ -186,7 +186,7 @@ export type RowPredicateFn = (row: Row) => boolean;
 /**
  * Class wrapper for {@link RowPredicateFn | `RowPredicateFn`} to provide
  * runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class RowPredicate {
@@ -220,7 +220,7 @@ export class RowPredicate {
 
 /**
  * A predicate that tests a {@link FlowPath | `FlowPath`}.
- * 
+ *
  * @category Predicates
  */
 export type FlowPredicateFn = (path: FlowPath) => boolean;
@@ -228,7 +228,7 @@ export type FlowPredicateFn = (path: FlowPath) => boolean;
 /**
  * Class wrapper for {@link FlowPredicateFn | `FlowPredicateFn`} to provide
  * runtime type identification.
- * 
+ *
  * @category Predicates
  */
 export class FlowPredicate {

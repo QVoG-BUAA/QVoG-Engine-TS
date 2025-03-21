@@ -4,13 +4,13 @@ export { process };
 
 /**
  * Vertex specification.
- * 
+ *
  * @category Database
  */
 export interface Vertex {
     /**
      * Unique identifier.
-     * 
+     *
      * All node and value parsed from the vertex share the same id.
      */
     id: number;
@@ -20,7 +20,7 @@ export interface Vertex {
 
 /**
  * Edge specification.
- * 
+ *
  * @category Database
  */
 export interface Edge {
@@ -33,7 +33,7 @@ export interface Edge {
 
 /**
  * Vertex property specification.
- * 
+ *
  * @category Database
  */
 export interface VertexProperty {
@@ -45,7 +45,7 @@ export interface VertexProperty {
 
 /**
  * Edge property specification.
- * 
+ *
  * @category Database
  */
 export interface EdgeProperty {
