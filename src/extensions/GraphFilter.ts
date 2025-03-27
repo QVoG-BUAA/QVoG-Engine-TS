@@ -5,8 +5,9 @@ import { Context } from '~/graph/Context';
 import { Vertex } from '~/db/gremlin/Defines';
 import { Configuration } from '~/Configuration';
 import { DataColumn } from '~/dsl/table/Column';
-import { ValuePredicate } from '~/dsl/Predicates';
+import { ValuePredicateFn } from '~/dsl/Predicates';
 import { GremlinConnection } from '~/db/gremlin/Connection';
+import { Value } from '~/graph';
 
 /**
  * Filter the graph database to get table of {@link Value | `Value`} that
@@ -19,7 +20,8 @@ export class GraphFilter {
 
     private context: Context;
     private connection?: GremlinConnection;
-    private predicate?: ValuePredicate;
+    private batchSize: number = 1000;
+    private actions: [string, ValuePredicateFn][] = [];
 
     constructor(context: Context) {
         this.context = context;
@@ -36,63 +38,81 @@ export class GraphFilter {
         return this;
     }
 
+    withBatchSize(batchSize: number): GraphFilter {
+        this.batchSize = batchSize;
+        return this;
+    }
+
     /**
      * Set the predicate to use for filtering. After filtering, only vertices that
      * satisfy the predicate will be included in the result.
      *
-     * @param predicate Filter predicate.
+     * @param action [alias, predicate][]
      * @returns Itself for chaining.
      */
-    withPredicate(predicate: ValuePredicate): GraphFilter {
-        this.predicate = predicate;
+    addAction(action: [string, ValuePredicateFn]): GraphFilter {
+        this.actions.push(action);
+        return this;
+    }
+
+    addActions(actions: [string, ValuePredicateFn][]): GraphFilter {
+        this.actions.push(...actions);
         return this;
     }
 
     /**
      * Filter the graph using the set connection and predicate.
      *
-     * > [!WARNING]
-     * > This method has serious performance issue and should be improved
-     * > in the future.
-     *
-     * @param name Name of the filtered table.
-     * @returns The filtered table.
+     * @returns The filtered tables.
      */
-    filter(name: string): Table {
+    filter(): Table[] {
         if (!this.connection) {
             throw new Error('Connection is not set');
         }
-        if (!this.predicate) {
-            throw new Error('Predicate is not set');
+
+        const columns: Map<string, DataColumn> = new Map();
+        this.actions.forEach(([alias, _]) => {
+            columns.set(alias, new DataColumn(alias, true));
+        });
+
+        let offset = 0;
+        let hasNext = true;
+        while (hasNext) {
+            let blocked = true;
+            this.connection.V().range(offset, offset + this.batchSize).toList()
+                .then((vertices: any) => {
+                    if (vertices.length === 0) {
+                        hasNext = false;
+                    } else {
+                        vertices.forEach((vertex: Vertex) => {
+                            const value = this.context.getValue(vertex, false);
+                            this.applyActions(value, columns);
+                        });
+                        offset += vertices.length;
+                    }
+                }).catch((e: any) => {
+                    this.log.error('Failed to get vertices', e);
+                }).finally(() => {
+                    blocked = false;
+                });
+            loopWhile(() => blocked);
         }
 
-        const table = new Table(name);
-        const column = new DataColumn(name, true);
+        const tables: Table[] = [];
+        for (const column of columns.values()) {
+            const table = new Table(column.getName());
+            table.addColumn(column);
+            tables.push(table);
+        }
 
-        // FIXME: Currently, all vertices will be fetched into memory then filtered.
-        // Therefore, this method is not suitable for large graphs.
-        let blocked = true;
-        this.connection
-            .V()
-            .toList()
-            .then((vertices: any) => {
-                vertices.forEach((vertex: Vertex) => {
-                    const value = this.context.getValue(vertex);
-                    if (this.predicate!.test(value)) {
-                        column.addValue(value);
-                    }
-                });
-            })
-            .catch((e: any) => {
-                this.log.error('Failed to get vertices', e);
-            })
-            .finally(() => {
-                blocked = false;
-            });
-        loopWhile(() => blocked);
+        return tables;
+    }
 
-        table.addColumn(column);
-
-        return table;
+    private applyActions(value: Value, columns: Map<string, DataColumn>): void {
+        this.actions.forEach(([alias, predicate]) => {
+            if (predicate(value)) {
+                columns.get(alias)!.addValue(value);
+            }
+        });
     }
 }

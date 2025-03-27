@@ -62,7 +62,8 @@ To run queries, you need a `config.json` file in the root directory of the proje
     "database": {
         "gremlin": {
             "host": "localhost",
-            "port": 8182
+            "port": 8182,
+            "batchSize": 1000
         }
     },
     "formatter": "default",
@@ -70,7 +71,7 @@ To run queries, you need a `config.json` file in the root directory of the proje
 }
 ```
 
-For the complete options, see `EngineOptions` interface.
+`batchSize` is the maximum number of vertices to be fetched in a single query. By default it is set to 1000. Configure this to tune the performance of the engine. For the complete options, see `EngineOptions` interface.
 
 ## Development
 

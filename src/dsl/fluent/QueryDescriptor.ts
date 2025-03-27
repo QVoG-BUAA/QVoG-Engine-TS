@@ -1,13 +1,13 @@
 import { Value } from '~/graph';
 import { DbContext } from '~/db/DbContext';
 import { AnyColumn } from '~/dsl/table/Column';
-import { Configuration } from '~/Configuration';
 import { GraphExt } from '~/extensions/GraphExt';
 import { Table, TableSet } from '~/dsl/table/Table';
 import { TablePrettifier } from '~/extensions/TableExt';
-import { FromClause, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
+import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
 import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent/FlowDescriptor';
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
+import { Configuration } from '~/Configuration';
 
 export interface ICanConfigure {
     // TODO: Add configuration methods
@@ -91,11 +91,11 @@ export interface ICanApplySelectClause {
     select(columns: string | string[]): CompleteQuery;
 }
 
-export interface InitialQuery extends ICanConfigure, ICanApplyFromClause {}
+export interface InitialQuery extends ICanConfigure, ICanApplyFromClause { }
 
-export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause {}
+export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause { }
 
-export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause {}
+export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause { }
 
 export interface CompleteQuery {
     /**
@@ -137,7 +137,11 @@ export interface IQueryDescriptor {
  * @category DSL API
  */
 export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQuery, FilteredQuery, CompleteQuery {
+    private context: FromContext = new FromContext();
+
     private tables: TableSet = new TableSet();
+    private prepared: boolean = false;
+
     private result?: Table;
 
     private dbContext?: DbContext;
@@ -162,7 +166,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     private fromDescriptor(descriptor: FromDescriptor): SimpleQuery {
-        this.tables.addTable(descriptor.apply(this.dbContext ? this.dbContext : Configuration.getDbContext()));
+        descriptor.apply(this.context);
         return this;
     }
 
@@ -177,6 +181,8 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause,
         flow?: () => IFlowDescriptorBuilder
     ): FilteredQuery {
+        this.prepareTables();
+
         if (param instanceof FilterDescriptor) {
             return this.filterDescriptor(param);
         } else if (param instanceof FlowDescriptor) {
@@ -215,6 +221,8 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
      * @inheritDoc ICanApplySelectClause.select
      */
     select(columns: string | string[]): CompleteQuery {
+        this.prepareTables();
+
         if (typeof columns === 'string') {
             columns = [columns];
         }
@@ -266,6 +274,14 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
             }
             return value.toString();
         });
+    }
+
+    private prepareTables(): void {
+        if (this.prepared) {
+            return;
+        }
+        this.tables = this.context.apply(this.dbContext || Configuration.getDbContext());
+        this.prepared = true;
     }
 }
 

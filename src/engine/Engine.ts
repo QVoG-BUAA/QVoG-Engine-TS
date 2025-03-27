@@ -154,6 +154,7 @@ export class QVoGEngine {
      * Close the engine and release resources.
      */
     close(): void {
+        this.log.info(`Total execution time: ${this.totalExecutionTime}ms`);
         this.output.println(`Total execution time: ${this.totalExecutionTime}ms`);
         this.output.close();
         Configuration.getDbContext().close();

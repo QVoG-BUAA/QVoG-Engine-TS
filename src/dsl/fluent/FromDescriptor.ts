@@ -1,8 +1,48 @@
-import { Table } from '~/dsl/table/Table';
+import { Table, TableSet } from '~/dsl/table/Table';
 import { DbContext } from '~/db/DbContext';
 import { Configuration } from '~/Configuration';
 import { PredicateColumn } from '~/dsl/table/Column';
 import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
+
+
+/**
+ * This holds the results of all from actions in the query.
+ * 
+ * @category DSL API
+ */
+export class FromContext {
+    private tables: TableSet = new TableSet();
+    private actions: [string, ValuePredicateFn][] = [];
+
+    addAction(alias: string, predicate: ValuePredicateFn): void {
+        this.actions.push([alias, predicate]);
+    }
+
+    /**
+     * Directly adding a table to the context.
+     * 
+     * @param table The table to add to the context.
+     */
+    addTable(table: Table): void {
+        this.tables.addTable(table);
+    }
+
+    /**
+     * Get the table set.
+     * 
+     * @param dbContext The database context.
+     * 
+     * @returns The table set.
+     */
+    apply(dbContext: DbContext): TableSet {
+        Configuration.getGraphFilter()
+            .withConnection(dbContext.getGremlinConnection())
+            .withBatchSize(dbContext.getBatchSize())
+            .addActions(this.actions)
+            .filter().forEach(table => this.tables.addTable(table));
+        return this.tables;
+    }
+}
 
 /**
  * Defines the behavior of a from action which is used to fetch data from a table.
@@ -22,9 +62,9 @@ import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
  */
 export class FromDescriptor {
     alias: string;
-    apply: (dbContext: DbContext) => Table;
+    apply: (context: FromContext) => void;
 
-    constructor(alias: string, apply: (dbContext: DbContext) => Table) {
+    constructor(alias: string, apply: (context: FromContext) => void) {
         this.alias = alias;
         this.apply = apply;
     }
@@ -124,11 +164,8 @@ export class FromDescriptorBuilder implements IFromDescriptorBuilder, ICanSetAli
 
 class DataFromDescriptorBuilder {
     static build(alias: string, predicate: ValuePredicate): FromDescriptor {
-        const apply = (dbContext: DbContext): Table => {
-            return Configuration.getGraphFilter()
-                .withConnection(dbContext.getGremlinConnection())
-                .withPredicate(predicate)
-                .filter(alias);
+        const apply = (context: FromContext) => {
+            context.addAction(alias, predicate.test);
         };
         return new FromDescriptor(alias, apply);
     }
@@ -136,10 +173,10 @@ class DataFromDescriptorBuilder {
 
 class PredicateFromDescriptorBuilder {
     static build(alias: string, predicate: ValuePredicate): FromDescriptor {
-        const apply = (dbContext: DbContext): Table => {
+        const apply = (context: FromContext) => {
             const table = new Table(alias);
             table.addColumn(new PredicateColumn(alias, predicate));
-            return table;
+            context.addTable(table);
         };
         return new FromDescriptor(alias, apply);
     }

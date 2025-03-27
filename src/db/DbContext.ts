@@ -34,11 +34,13 @@ export interface DatabaseOptions {
 export class DbContext {
     private log = Configuration.getLogger('DbContext');
     private gremlin: GremlinConnection;
+    private batchSize: number;
 
     constructor(options: DatabaseOptions) {
         this.log.info('Creating DbContext');
         this.log.debug('Connecting to Gremlin');
         this.gremlin = new GremlinConnection(`ws://${options.gremlin.host}:${options.gremlin.port}/gremlin`);
+        this.batchSize = options.gremlin.batchSize || 1000;
         this.log.trace('DbContext created');
     }
 
@@ -49,6 +51,18 @@ export class DbContext {
      */
     getGremlinConnection(): GremlinConnection {
         return this.gremlin;
+    }
+
+    /**
+     * Get the batch size.
+     * 
+     * This is the user preference for the maximum number of vertices to fetch in memory.
+     * Can be omitted, but is recommended to use this limit.
+     * 
+     * @returns The batch size.
+     */
+    getBatchSize(): number {
+        return this.batchSize;
     }
 
     /**

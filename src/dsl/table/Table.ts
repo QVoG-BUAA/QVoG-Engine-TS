@@ -278,7 +278,8 @@ export class TableSet {
 
     asTable(): Table {
         if (this.tables.size !== 1) {
-            throw new Error('Table set must contain exactly one table');
+            const tables = Array.from(this.tables.keys()).join(', ');
+            throw new Error(`Table set must contain exactly one table, tables: ${tables}`);
         }
         return this.tables.values().next().value!;
     }

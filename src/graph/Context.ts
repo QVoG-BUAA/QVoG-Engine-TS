@@ -32,11 +32,13 @@ export class Context {
      * If vertex or vertex id is provided, and the corresponding node does not exist,
      * it will first parse the vertex and register the node, then return the value.
      *
+     * To avoid too much cache pressure, set cache to `false` before actual query.
+     * 
      * @param key A value that can be used to identify a node.
      * @returns The value associated with the key.
      */
-    getValue(key: Vertex | GraphNode | number): Value {
-        return this.getRegistration(key)[1];
+    getValue(key: Vertex | GraphNode | number, cache: boolean = true): Value {
+        return this.getRegistration(key, cache)[1];
     }
 
     /**
@@ -55,7 +57,7 @@ export class Context {
         return this.getRegistration(key)[0];
     }
 
-    private getRegistration(key: Vertex | GraphNode | Value | number): NodeRegistration {
+    private getRegistration(key: Vertex | GraphNode | Value | number, cache: boolean = true): NodeRegistration {
         let registration = this.tryGetRegistration(key);
         if (!registration) {
             if (typeof key === 'number') {
@@ -65,7 +67,7 @@ export class Context {
             } else if (key instanceof Value) {
                 throw new Error(`Node with id ${key.getId()} is not available`);
             }
-            registration = this.register(key);
+            registration = this.register(key, cache);
         }
         return registration;
     }
@@ -81,7 +83,14 @@ export class Context {
         return this.registry.get(key.id);
     }
 
-    private register(vertex: Vertex): NodeRegistration {
+    /**
+     * To avoid too much cache pressure, set cache to `false` before actual query.
+     * 
+     * @param vertex The vertex to register
+     * @param cache Whether to cache the node and value.
+     * @returns The registered node and value.
+     */
+    private register(vertex: Vertex, cache: boolean = true): NodeRegistration {
         const properties = new Map<string, any>();
         if (vertex.properties) {
             Object.entries(vertex.properties).forEach(([key, value]) => {
@@ -97,9 +106,11 @@ export class Context {
         } else {
             throw new Error(`Unsupported vertex label "${vertex.label}"`);
         }
-        this.registry.set(registration[0].getId(), registration);
 
-        this.log.trace(`Registered node: ${registration[0].getId()}`);
+        // only cache the node and value if requested
+        if (!cache) {
+            this.registry.set(registration[0].getId(), registration);
+        }
 
         return registration;
     }
