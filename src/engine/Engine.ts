@@ -1,10 +1,10 @@
 import { DbContext } from '~/db/DbContext';
-import { Queryable } from '~/engine/Defines';
+import { EngineOptions, Queryable } from '~/engine/Defines';
 import { Configuration } from '~/Configuration';
 import { TablePrettifier } from '~/extensions/TableExt';
 import { Query, QueryDescriptor } from '~/dsl/fluent/QueryDescriptor';
-import { ConsolePrintStream, FileUtils, PrintStream } from '~/extensions/IOExt';
-import { DefaultResultFormatter, IResultFormatter } from '~/extensions/ResultFormatter';
+import { ConsolePrintStream, createPrintStream, FileUtils, PrintStream } from '~/extensions/IOExt';
+import { createResultFormatter, DefaultResultFormatter, IResultFormatter } from '~/extensions/ResultFormatter';
 
 /**
  * The execution engine of QVoG that runs queries and outputs results.
@@ -28,8 +28,17 @@ export class QVoGEngine {
     private constructor(filename: string = 'config.json') {
         this.log.info('Initializing QVoG Engine');
 
-        const config = JSON.parse(FileUtils.readTextFile(filename));
-        Configuration.setDbContext(new DbContext(config));
+        const config: EngineOptions = JSON.parse(FileUtils.readTextFile(filename));
+        Configuration.setDbContext(new DbContext(config.database));
+        if (config.formatter) {
+            this.withFormatter(createResultFormatter(config.formatter));
+        }
+        if (config.style) {
+            this.withStyle(config.style);
+        }
+        if (config.output) {
+            this.withOutput(createPrintStream(config.output));
+        }
 
         this.log.info('QVoG Engine initialized');
     }

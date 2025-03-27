@@ -38,7 +38,7 @@ export class ConsolePrintStream implements PrintStream {
 export class FilePrintStream implements PrintStream {
     private fd: number = 0;
 
-    constructor(file: string, append: boolean) {
+    constructor(file: string, append: boolean = true) {
         this.fd = fs.openSync(file, append ? 'a' : 'w');
     }
 
@@ -53,6 +53,21 @@ export class FilePrintStream implements PrintStream {
     close(): void {
         fs.closeSync(this.fd);
     }
+}
+
+/**
+ * Get a print stream for writing to the console.
+ * 
+ * `append` is not used for console output.
+ * 
+ * @param file The file path. Use stdout for standard output.
+ * @param append Whether to append to the file or overwrite it.
+ * @returns A print stream.
+ * 
+ * @category Extension
+ */
+export function createPrintStream(file: string, append: boolean = true): PrintStream {
+    return file === 'stdout' ? new ConsolePrintStream() : new FilePrintStream(file, append);
 }
 
 /**

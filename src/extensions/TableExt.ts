@@ -35,7 +35,7 @@ export class TablePrettifier {
      *
      * - markdown: Markdown syntax
      * - json: JSON with indentation of 4 spaces
-     * - json-compact: JSON without indentation and newlines
+     * - json-min: JSON without indentation and newlines
      *
      * @param format The output format.
      * @returns The table as a string in the specified format.
@@ -46,7 +46,7 @@ export class TablePrettifier {
                 return this.toMarkdown();
             case 'json':
                 return this.toJson(false);
-            case 'json-compact':
+            case 'json-min':
                 return this.toJson(true);
             default:
                 throw new Error(`Invalid format: ${format}`);

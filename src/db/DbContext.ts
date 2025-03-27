@@ -9,6 +9,12 @@ import { GremlinConnection } from '~/db/gremlin/Connection';
 export interface GremlinOptions {
     host: string;
     port: number;
+
+    /**
+     * Maximum number of vertices to fetch in memory.
+     * Default is 1000.
+     */
+    batchSize?: number;
 }
 
 /**

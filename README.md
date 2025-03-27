@@ -53,10 +53,30 @@ Later, in the project that uses the library, run the following command:
 npm link qvog-engine
 ```
 
+### Configuration
+
+To run queries, you need a `config.json` file in the root directory of the project. An example configuration is as follows:
+
+```json
+{
+    "database": {
+        "gremlin": {
+            "host": "localhost",
+            "port": 8182
+        }
+    },
+    "formatter": "default",
+    "style": "markdown"
+}
+```
+
+For the complete options, see `EngineOptions` interface.
+
 ## Development
 
-For better code style, we have ESLint set up. To run the linter, run the following command to check and fix the code:
+For better code style, we have ESLint and prettier set up. To run the linter and prettier, run the following command to check and fix the code:
 
 ```bash
 npm run lint
+npm run format
 ```

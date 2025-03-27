@@ -1,3 +1,4 @@
+import { DatabaseOptions } from '~/db';
 import { Query } from '~/dsl/fluent/QueryDescriptor';
 
 /**
@@ -30,3 +31,27 @@ export interface QueryResult {
  * @category Engine
  */
 export type Queryable = [string, Query];
+
+/**
+ * Options for the engine.
+ * 
+ * @category Engine
+ */
+export interface EngineOptions {
+    database: DatabaseOptions;
+
+    /**
+     * 'default' | 'json' | 'json-min' | 'json-console'
+     */
+    formatter?: string;
+
+    /**
+     * 'stdout' | file path
+     */
+    output?: string;
+
+    /**
+     * 'default' | 'json' | 'json-min' | 'markdown'
+     */
+    style?: string;
+}
