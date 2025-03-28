@@ -23,7 +23,7 @@ export class GraphExt {
         } else if (obj instanceof GraphNode) {
             node = obj;
         } else if (obj instanceof Value) {
-            node = context.getNode(obj.getId());
+            node = context.getNode(obj.id);
         } else {
             throw new Error(`Unsupported object type: ${typeof obj}`);
         }
@@ -38,11 +38,11 @@ export class GraphExt {
     }
 
     private static formatFileNode(node: FileNode): string {
-        return `File: ${node.getProperty().path}`;
+        return `File: ${node.property.path}`;
     }
 
     private static formatCodeNode(node: CodeNode): string {
-        const property = node.getProperty();
+        const property = node.property;
         let description = `(${property.file}:${property.lineno}) `;
         if (property.code.length > 50) {
             description += property.code.substring(0, 50) + '...';

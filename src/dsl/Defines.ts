@@ -62,9 +62,9 @@ export class FlowStream {
             const node = context.getNode(value);
             let text: string;
             if (node instanceof CodeNode) {
-                text = node.getProperty().lineno.toString();
+                text = node.property.lineno.toString();
             } else if (node instanceof FileNode) {
-                text = node.getProperty().path;
+                text = node.property.path;
             } else {
                 throw new Error('Unexpected node type');
             }
@@ -161,9 +161,9 @@ export class FlowPath {
             const node = context.getNode(value);
             let text: string;
             if (node instanceof CodeNode) {
-                text = node.getProperty().lineno.toString();
+                text = node.property.lineno.toString();
             } else if (node instanceof FileNode) {
-                text = node.getProperty().path;
+                text = node.property.path;
             } else {
                 throw new Error('Unexpected node type');
             }

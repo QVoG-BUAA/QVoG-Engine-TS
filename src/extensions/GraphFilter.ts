@@ -79,7 +79,10 @@ export class GraphFilter {
         let hasNext = true;
         while (hasNext) {
             let blocked = true;
-            this.connection.V().range(offset, offset + this.batchSize).toList()
+            this.connection
+                .V()
+                .range(offset, offset + this.batchSize)
+                .toList()
                 .then((vertices: any) => {
                     if (vertices.length === 0) {
                         hasNext = false;
@@ -90,9 +93,11 @@ export class GraphFilter {
                         });
                         offset += vertices.length;
                     }
-                }).catch((e: any) => {
+                })
+                .catch((e: any) => {
                     this.log.error('Failed to get vertices', e);
-                }).finally(() => {
+                })
+                .finally(() => {
                     blocked = false;
                 });
             loopWhile(() => blocked);

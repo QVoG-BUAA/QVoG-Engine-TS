@@ -24,7 +24,7 @@ export interface QueryResult {
 
 /**
  * Options for the engine.
- * 
+ *
  * @category Engine
  */
 export interface EngineOptions {

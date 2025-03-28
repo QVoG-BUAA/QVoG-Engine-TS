@@ -38,15 +38,15 @@ function getCurrentDescriptor(): QueryDescriptor {
 
 /**
  * Construct a query in a non-fluent way.
- * 
+ *
  * [!WARNING]
  * This is deprecated, as it breaks the type check and calling order that
  * the fluent API enforces.
- * 
+ *
  * @param name Name of the query.
  * @param action Callback function to build the query.
  * @returns The query object {@link Queryable}.
- * 
+ *
  * @category DSL API
  */
 export function query(name: string, action: () => void): Queryable {
@@ -61,7 +61,7 @@ export function query(name: string, action: () => void): Queryable {
 
 /**
  * @see {@link QueryDescriptor.from}.
- * 
+ *
  * @category DSL API
  */
 export function from(param: FromDescriptor | FromClause) {

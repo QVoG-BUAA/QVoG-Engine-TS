@@ -55,10 +55,10 @@ export class DbContext {
 
     /**
      * Get the batch size.
-     * 
+     *
      * This is the user preference for the maximum number of vertices to fetch in memory.
      * Can be omitted, but is recommended to use this limit.
-     * 
+     *
      * @returns The batch size.
      */
     getBatchSize(): number {

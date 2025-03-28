@@ -9,7 +9,6 @@ import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
 import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
 
-
 export interface ICanConfigure {
     // TODO: Add configuration methods
 }
@@ -92,11 +91,11 @@ export interface ICanApplySelectClause {
     select(...columns: string[]): CompleteQuery;
 }
 
-export interface InitialQuery extends ICanConfigure, ICanApplyFromClause { }
+export interface InitialQuery extends ICanConfigure, ICanApplyFromClause {}
 
-export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause { }
+export interface SimpleQuery extends ICanApplyFromClause, ICanApplyWhereClause, ICanApplySelectClause {}
 
-export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause { }
+export interface FilteredQuery extends ICanApplyWhereClause, ICanApplySelectClause {}
 
 export interface CompleteQuery {
     /**

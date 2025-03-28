@@ -4,10 +4,9 @@ import { Configuration } from '~/Configuration';
 import { PredicateColumn } from '~/dsl/table/Column';
 import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
 
-
 /**
  * This holds the results of all from actions in the query.
- * 
+ *
  * @category DSL API
  */
 export class FromContext {
@@ -20,7 +19,7 @@ export class FromContext {
 
     /**
      * Directly adding a table to the context.
-     * 
+     *
      * @param table The table to add to the context.
      */
     addTable(table: Table): void {
@@ -29,9 +28,9 @@ export class FromContext {
 
     /**
      * Get the table set.
-     * 
+     *
      * @param dbContext The database context.
-     * 
+     *
      * @returns The table set.
      */
     apply(dbContext: DbContext): TableSet {
@@ -39,7 +38,8 @@ export class FromContext {
             .withConnection(dbContext.getGremlinConnection())
             .withBatchSize(dbContext.getBatchSize())
             .addActions(this.actions)
-            .filter().forEach(table => this.tables.addTable(table));
+            .filter()
+            .forEach((table) => this.tables.addTable(table));
         return this.tables;
     }
 }

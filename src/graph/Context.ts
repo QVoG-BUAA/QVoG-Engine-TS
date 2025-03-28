@@ -33,7 +33,7 @@ export class Context {
      * it will first parse the vertex and register the node, then return the value.
      *
      * To avoid too much cache pressure, set cache to `false` before actual query.
-     * 
+     *
      * @param key A value that can be used to identify a node.
      * @returns The value associated with the key.
      */
@@ -63,9 +63,9 @@ export class Context {
             if (typeof key === 'number') {
                 throw new Error(`Node with id ${key} is not available`);
             } else if (key instanceof GraphNode) {
-                throw new Error(`Node with id ${key.getId()} is not available`);
+                throw new Error(`Node with id ${key.id} is not available`);
             } else if (key instanceof Value) {
-                throw new Error(`Node with id ${key.getId()} is not available`);
+                throw new Error(`Node with id ${key.id} is not available`);
             }
             registration = this.register(key, cache);
         }
@@ -76,16 +76,16 @@ export class Context {
         if (typeof key === 'number') {
             return this.registry.get(key);
         } else if (key instanceof GraphNode) {
-            return this.registry.get(key.getId());
+            return this.registry.get(key.id);
         } else if (key instanceof Value) {
-            return this.registry.get(key.getId());
+            return this.registry.get(key.id);
         }
         return this.registry.get(key.id);
     }
 
     /**
      * To avoid too much cache pressure, set cache to `false` before actual query.
-     * 
+     *
      * @param vertex The vertex to register
      * @param cache Whether to cache the node and value.
      * @returns The registered node and value.
@@ -109,7 +109,7 @@ export class Context {
 
         // only cache the node and value if requested
         if (!cache) {
-            this.registry.set(registration[0].getId(), registration);
+            this.registry.set(registration[0].id, registration);
         }
 
         return registration;
@@ -142,7 +142,7 @@ export class Context {
         const value = this.factory.buildValue(json);
 
         // link all values in the AST to this node
-        value.stream().forEach((v) => v.setId(node.getId()));
+        value.stream().forEach((v) => (v.id = node.id));
 
         return [node, value];
     }
@@ -154,7 +154,7 @@ export class Context {
 
         const node = new FileNode(vertex, props);
         const value = new InvalidValue('file');
-        value.setId(node.getId());
+        value.id = node.id;
 
         return [node, value];
     }

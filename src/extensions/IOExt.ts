@@ -57,13 +57,13 @@ export class FilePrintStream implements PrintStream {
 
 /**
  * Get a print stream for writing to the console.
- * 
+ *
  * `append` is not used for console output.
- * 
+ *
  * @param file The file path. Use stdout for standard output.
  * @param append Whether to append to the file or overwrite it.
  * @returns A print stream.
- * 
+ *
  * @category Extension
  */
 export function createPrintStream(file: string, append: boolean = true): PrintStream {

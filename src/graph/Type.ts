@@ -6,22 +6,22 @@ import { AstJson } from './Defines';
  * @category Graph
  */
 export abstract class Type {
-    private identifier: string;
-    private name: string;
-    private supported: boolean;
+    private _identifier: string;
+    private _name: string;
+    private _supported: boolean;
 
     /**
      * Note that some types may not have a name, i.e. array, tuple, etc.
      * Some hard-coded name may be assigned to them.
-     * 
+     *
      * @param identifier The syntax component identifier, i.e. NumberType.
      * @param name The lexeme name of the type, i.e. int, number, string.
      * @param supported Whether this type is supported by the current implementation.
      */
     constructor(identifier: string, name: string = '', supported: boolean = true) {
-        this.identifier = identifier;
-        this.name = name;
-        this.supported = supported;
+        this._identifier = identifier;
+        this._name = name;
+        this._supported = supported;
     }
 
     /**
@@ -29,8 +29,8 @@ export abstract class Type {
      *
      * @returns The identifier.
      */
-    getIdentifier(): string {
-        return this.identifier;
+    public get identifier(): string {
+        return this._identifier;
     }
 
     /**
@@ -38,8 +38,8 @@ export abstract class Type {
      *
      * @returns The name.
      */
-    getName(): string {
-        return this.name;
+    public get name(): string {
+        return this._name;
     }
 
     /**
@@ -48,8 +48,8 @@ export abstract class Type {
      *
      * @returns Whether the type is supported.
      */
-    isSupported(): boolean {
-        return this.supported;
+    public get supported(): boolean {
+        return this._supported;
     }
 }
 

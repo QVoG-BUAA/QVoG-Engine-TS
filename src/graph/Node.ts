@@ -14,10 +14,10 @@ import { CodeProperty, FileProperty } from '~/graph/Defines';
  * @category Graph
  */
 export abstract class GraphNode {
-    protected vertex: Vertex;
+    protected _vertex: Vertex;
 
     constructor(vertex: Vertex) {
-        this.vertex = vertex;
+        this._vertex = vertex;
     }
 
     /**
@@ -25,8 +25,8 @@ export abstract class GraphNode {
      *
      * @returns The id.
      */
-    getId(): number {
-        return this.vertex.id;
+    public get id(): number {
+        return this._vertex.id;
     }
 
     /**
@@ -34,8 +34,8 @@ export abstract class GraphNode {
      *
      * @returns The vertex.
      */
-    getVertex(): Vertex {
-        return this.vertex;
+    public get vertex(): Vertex {
+        return this._vertex;
     }
 }
 
@@ -48,11 +48,11 @@ export abstract class GraphNode {
  * @category Graph
  */
 export class CodeNode extends GraphNode {
-    private property: CodeProperty;
+    private _property: CodeProperty;
 
     constructor(vertex: Vertex, property: CodeProperty) {
         super(vertex);
-        this.property = property;
+        this._property = property;
     }
 
     /**
@@ -60,8 +60,8 @@ export class CodeNode extends GraphNode {
      *
      * @returns Code property.
      */
-    getProperty(): CodeProperty {
-        return this.property;
+    public get property(): CodeProperty {
+        return this._property;
     }
 }
 
@@ -71,11 +71,11 @@ export class CodeNode extends GraphNode {
  * @category Graph
  */
 export class FileNode extends GraphNode {
-    private property: FileProperty;
+    private _property: FileProperty;
 
     constructor(vertex: Vertex, property: FileProperty) {
         super(vertex);
-        this.property = property;
+        this._property = property;
     }
 
     /**
@@ -83,7 +83,7 @@ export class FileNode extends GraphNode {
      *
      * @returns File property.
      */
-    getProperty(): FileProperty {
-        return this.property;
+    public get property(): FileProperty {
+        return this._property;
     }
 }

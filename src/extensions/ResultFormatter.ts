@@ -28,10 +28,10 @@ export class DefaultResultFormatter extends IResultFormatter {
 
 /**
  * Result formatter that outputs the result as indented JSON.
- * 
+ *
  * The difference between this and {@link JsonResultFormatter} is that this
  * will parse the query result as JSON, instead of output it as raw text.
- * 
+ *
  * [!WARNING]
  * This should only be used when style is set to 'json' also.
  *
@@ -81,7 +81,7 @@ export class JsonResultFormatter extends IResultFormatter {
 
 /**
  * Create a result formatter based on the format.
- * 
+ *
  * @param format The format of the result.
  * @returns The result formatter.
  */

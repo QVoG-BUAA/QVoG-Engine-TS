@@ -10,14 +10,14 @@ import { AstJson } from './Defines';
  * @category Graph
  */
 export abstract class Value {
-    private id?: number;
-    private identifier: string;
-    private type: Type = new InvalidType();
-    private supported: boolean;
+    private _id?: number;
+    private _identifier: string;
+    private _type: Type = new InvalidType();
+    private _supported: boolean;
 
     constructor(identifier: string, supported: boolean = true) {
-        this.identifier = identifier;
-        this.supported = supported;
+        this._identifier = identifier;
+        this._supported = supported;
     }
 
     /**
@@ -32,7 +32,7 @@ export abstract class Value {
      *
      * @returns The complete node in the graph database this value is associated with.
      */
-    getNode(): CodeNode {
+    public get node(): CodeNode {
         return Configuration.getContext().getNode(this) as CodeNode;
     }
 
@@ -43,25 +43,25 @@ export abstract class Value {
      *
      * @returns The original
      */
-    getCode(): string {
-        return this.getNode().getProperty().code;
+    public get code(): string {
+        return this.node.property.code;
     }
 
     /**
      * @internal
      */
-    setId(id: number): void {
-        this.id = id;
+    public set id(id: number) {
+        this._id = id;
     }
 
     /**
      * Get the id of the vertex in the graph database this value represents.
      */
-    getId(): number {
-        if (!this.id) {
+    public get id(): number {
+        if (!this._id) {
             throw new Error('Value id not available');
         }
-        return this.id;
+        return this._id;
     }
 
     /**
@@ -69,12 +69,12 @@ export abstract class Value {
      *
      * @returns The identifier.
      */
-    getIdentifier(): string {
-        return this.identifier;
+    public get identifier(): string {
+        return this._identifier;
     }
 
-    setType(type: Type): void {
-        this.type = type;
+    public set type(type: Type) {
+        this._type = type;
     }
 
     /**
@@ -82,8 +82,8 @@ export abstract class Value {
      *
      * @returns The type of this value.
      */
-    getType(): Type {
-        return this.type;
+    public get type(): Type {
+        return this._type;
     }
 
     /**
@@ -92,8 +92,8 @@ export abstract class Value {
      *
      * @returns Whether this value is supported by the current implementation.
      */
-    isSupported(): boolean {
-        return this.supported;
+    public get supported(): boolean {
+        return this._supported;
     }
 
     /**

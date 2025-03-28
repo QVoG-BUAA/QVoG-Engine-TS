@@ -5,7 +5,7 @@ import { ArrayIterator } from '~/extensions/Iterator';
 type Index = Map<number, number>;
 
 export function valueIndex(value: Value): number {
-    return value.getId();
+    return value.id;
 }
 
 /**
