@@ -1,5 +1,4 @@
 import { DatabaseOptions } from '~/db';
-import { Query } from '~/dsl/fluent/QueryDescriptor';
 
 /**
  * Result of a query execution.
@@ -22,15 +21,6 @@ export interface QueryResult {
      */
     milliseconds: number;
 }
-
-/**
- * Define a query that can be executed by the engine.
- * [0] - Query name.
- * [1] - Query object.
- *
- * @category Engine
- */
-export type Queryable = [string, Query];
 
 /**
  * Options for the engine.

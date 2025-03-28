@@ -1,8 +1,8 @@
 import { DbContext } from '~/db/DbContext';
-import { EngineOptions, Queryable } from '~/engine/Defines';
 import { Configuration } from '~/Configuration';
+import { EngineOptions } from '~/engine/Defines';
 import { TablePrettifier } from '~/extensions/TableExt';
-import { Query, QueryDescriptor } from '~/dsl/fluent/QueryDescriptor';
+import { Query, Queryable, QueryDescriptor } from '~/dsl/fluent/QueryDescriptor';
 import { ConsolePrintStream, createPrintStream, FileUtils, PrintStream } from '~/extensions/IOExt';
 import { createResultFormatter, DefaultResultFormatter, IResultFormatter } from '~/extensions/ResultFormatter';
 

@@ -1,13 +1,14 @@
 import { Value } from '~/graph';
 import { DbContext } from '~/db/DbContext';
 import { AnyColumn } from '~/dsl/table/Column';
+import { Configuration } from '~/Configuration';
 import { GraphExt } from '~/extensions/GraphExt';
 import { Table, TableSet } from '~/dsl/table/Table';
 import { TablePrettifier } from '~/extensions/TableExt';
-import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
 import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent/FlowDescriptor';
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
-import { Configuration } from '~/Configuration';
+import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
+
 
 export interface ICanConfigure {
     // TODO: Add configuration methods
@@ -88,7 +89,7 @@ export interface ICanApplySelectClause {
      *
      * @param columns Columns to select from the result table.
      */
-    select(columns: string | string[]): CompleteQuery;
+    select(...columns: string[]): CompleteQuery;
 }
 
 export interface InitialQuery extends ICanConfigure, ICanApplyFromClause { }
@@ -220,12 +221,8 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     /**
      * @inheritDoc ICanApplySelectClause.select
      */
-    select(columns: string | string[]): CompleteQuery {
+    select(...columns: string[]): CompleteQuery {
         this.prepareTables();
-
-        if (typeof columns === 'string') {
-            columns = [columns];
-        }
 
         const table = this.tables.asTable();
         this.result = new Table('Query Result');
@@ -291,3 +288,12 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
  * @category DSL API
  */
 export type Query = (descriptor: InitialQuery) => CompleteQuery;
+
+/**
+ * Define a query that can be executed by the engine.
+ * [0] - Query name.
+ * [1] - Query object.
+ *
+ * @category Engine
+ */
+export type Queryable = [string, Query];
