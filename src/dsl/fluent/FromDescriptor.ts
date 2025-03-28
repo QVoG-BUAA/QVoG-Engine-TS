@@ -1,6 +1,6 @@
-import { Table, TableSet } from '~/dsl/table/Table';
 import { DbContext } from '~/db/DbContext';
 import { Configuration } from '~/Configuration';
+import { Table, TableSet } from '~/dsl/table/Table';
 import { PredicateColumn } from '~/dsl/table/Column';
 import { ValuePredicate, ValuePredicateFn } from '~/dsl/Predicates';
 

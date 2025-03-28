@@ -5,6 +5,7 @@ import { Configuration } from '~/Configuration';
 import { GraphExt } from '~/extensions/GraphExt';
 import { Table, TableSet } from '~/dsl/table/Table';
 import { TablePrettifier } from '~/extensions/TableExt';
+import { CurrentQueryContext } from '~/dsl/fluent/QueryContext';
 import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent/FlowDescriptor';
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
 import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
@@ -60,7 +61,7 @@ export interface ICanApplyWhereClause {
      *
      * @param descriptor Pre-built flow descriptor.
      */
-    where(descriptor: FlowDescriptor): FilteredQuery;
+    exists(descriptor: FlowDescriptor): FilteredQuery;
 
     /**
      * Build a flow descriptor with the clause and apply it.
@@ -71,7 +72,7 @@ export interface ICanApplyWhereClause {
      * @param clause Flow clause.
      * @param flow Flow action builder.
      */
-    where(clause: FlowClause, flow: () => IFlowDescriptorBuilder): FilteredQuery;
+    exists(clause: FlowClause, flow: () => IFlowDescriptorBuilder): FilteredQuery;
 }
 
 export interface ICanApplySelectClause {
@@ -171,27 +172,36 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
     }
 
     private fromClause(clause: FromClause): SimpleQuery {
-        return this.fromDescriptor(clause(new FromDescriptorBuilder()).build());
+        const descriptor = new FromDescriptorBuilder();
+        CurrentQueryContext.requireFromDescriptor(descriptor as FromDescriptorBuilder);
+        const query = this.fromDescriptor(clause(descriptor).build());
+        CurrentQueryContext.releaseFromDescriptor();
+
+        return query;
     }
 
     /**
      * See {@link ICanApplyWhereClause | `ICanApplyWhereClause`}.
      */
-    where(
-        param: FilterDescriptor | FilterClause | FlowDescriptor | FlowClause,
-        flow?: () => IFlowDescriptorBuilder
-    ): FilteredQuery {
+    where(param: FilterDescriptor | FilterClause): FilteredQuery {
         this.prepareTables();
 
         if (param instanceof FilterDescriptor) {
             return this.filterDescriptor(param);
-        } else if (param instanceof FlowDescriptor) {
-            return this.flowDescriptor(param);
-        } else if (flow) {
-            return this.flowClause(param as FlowClause, flow);
         } else {
             return this.filterClause(param as FilterClause);
         }
+    }
+
+    exists(param: FlowDescriptor | FlowClause, flow?: () => IFlowDescriptorBuilder): FilteredQuery {
+        this.prepareTables();
+
+        if (param instanceof FlowDescriptor) {
+            return this.flowDescriptor(param);
+        } else if (flow) {
+            return this.flowClause(param as FlowClause, flow);
+        }
+        throw new Error('Flow action is required for flow clause.');
     }
 
     private filterDescriptor(descriptor: FilterDescriptor): FilteredQuery {
