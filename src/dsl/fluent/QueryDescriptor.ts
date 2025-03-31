@@ -5,7 +5,7 @@ import { Configuration } from '~/Configuration';
 import { GraphExt } from '~/extensions/GraphExt';
 import { Table, TableSet } from '~/dsl/table/Table';
 import { TablePrettifier } from '~/extensions/TableExt';
-import { CurrentQueryContext } from '~/dsl/fluent/QueryContext';
+import { CurrentQueryContext } from '~/extensions/dsl/QueryContext';
 import { FlowClause, FlowDescriptor, IFlowDescriptorBuilder } from '~/dsl/fluent/FlowDescriptor';
 import { FilterClause, FilterDescriptor, FilterDescriptorBuilder } from '~/dsl/fluent/FilterDescriptor';
 import { FromClause, FromContext, FromDescriptor, FromDescriptorBuilder } from '~/dsl/fluent/FromDescriptor';
@@ -147,6 +147,9 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
 
     private dbContext?: DbContext;
 
+    private lastFromDescriptor?: FromDescriptor;
+    private lastExistsDescriptor?: FlowDescriptor;
+
     /**
      * @inheritDoc IQueryDescriptor.withDatabase
      */
@@ -166,8 +169,37 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
         }
     }
 
+    /**
+     * This is intended for internal use only to simplify the DSL API.
+     *
+     * [!WARNING]
+     * Do not use it, unless you know what you are doing.
+     *
+     * @returns The last from descriptor used in the query.
+     *
+     * @internal
+     */
+    getLastFromDescriptor(): FromDescriptor | undefined {
+        return this.lastFromDescriptor;
+    }
+
+    /**
+     * This is intended for internal use only to simplify the DSL API.
+     *
+     * [!WARNING]
+     * Do not use it, unless you know what you are doing.
+     *
+     * @returns The last from descriptor used in the query.
+     *
+     * @internal
+     */
+    getLastExistsDescriptor(): FlowDescriptor | undefined {
+        return this.lastExistsDescriptor;
+    }
+
     private fromDescriptor(descriptor: FromDescriptor): SimpleQuery {
         descriptor.apply(this.context);
+        this.lastFromDescriptor = descriptor;
         return this;
     }
 
@@ -220,6 +252,7 @@ export class QueryDescriptor implements IQueryDescriptor, InitialQuery, SimpleQu
             ? this.tables.removeTable(descriptor.properties.barrierAlias)
             : undefined;
         this.tables.addTable(descriptor.apply(source, sink, barrier));
+        this.lastExistsDescriptor = descriptor;
         return this;
     }
 

@@ -1,8 +1,8 @@
 import { CodeNode } from '~/graph/Node';
+import { AstJson } from '~/graph/Defines';
 import { Stream } from '~/extensions/Stream';
 import { Configuration } from '~/Configuration';
 import { InvalidType, Type } from '~/graph/Type';
-import { AstJson } from './Defines';
 
 /**
  * Base class for all values.

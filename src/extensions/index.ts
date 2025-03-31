@@ -5,3 +5,6 @@ export * from './Iterator';
 export * from './ResultFormatter';
 export * from './Stream';
 export * from './TableExt';
+
+export * from './dsl/QueryBuilder';
+export * from './dsl/QueryContext';

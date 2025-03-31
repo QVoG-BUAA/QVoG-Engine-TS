@@ -101,10 +101,10 @@ export class FlowStream {
  * @category DSL Data
  */
 export class FlowPath {
-    private path: Value[];
+    private _path: Value[];
 
     constructor(path?: Value[]) {
-        this.path = path ? [...path] : [];
+        this._path = path ? [...path] : [];
     }
 
     /**
@@ -112,8 +112,8 @@ export class FlowPath {
      *
      * @returns The size.
      */
-    getSize(): number {
-        return this.path.length;
+    public get size(): number {
+        return this._path.length;
     }
 
     /**
@@ -121,7 +121,7 @@ export class FlowPath {
      * @param step Step to add.
      */
     add(step: Value): void {
-        this.path.push(step);
+        this._path.push(step);
     }
 
     /**
@@ -129,8 +129,8 @@ export class FlowPath {
      *
      * @returns The path.
      */
-    getPath(): Value[] {
-        return this.path;
+    public get path(): Value[] {
+        return this._path;
     }
 
     /**
@@ -139,7 +139,7 @@ export class FlowPath {
      * @returns A copy of the path.
      */
     clone(): FlowPath {
-        return new FlowPath(this.path);
+        return new FlowPath(this._path);
     }
 
     /**
@@ -187,6 +187,6 @@ export class FlowPath {
      * @returns The iterator.
      */
     iterator(): Iterator<Value> {
-        return new ArrayIterator(this.path);
+        return new ArrayIterator(this._path);
     }
 }

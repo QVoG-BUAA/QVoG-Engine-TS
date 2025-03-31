@@ -4,8 +4,8 @@ export * from './Predicates';
 export * from './fluent/FlowDescriptor';
 export * from './fluent/FilterDescriptor';
 export * from './fluent/FromDescriptor';
-export * from './fluent/QueryBuilder';
-export * from './fluent/QueryContext';
+export * from '../extensions/dsl/QueryBuilder';
+export * from '../extensions/dsl/QueryContext';
 export * from './fluent/QueryDescriptor';
 
 export * from './table/Column';

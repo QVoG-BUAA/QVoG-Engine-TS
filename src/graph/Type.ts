@@ -1,4 +1,4 @@
-import { AstJson } from './Defines';
+import { AstJson } from '~/graph/Defines';
 
 /**
  * Base class for all types.
